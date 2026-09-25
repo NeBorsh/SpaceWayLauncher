@@ -15,16 +15,10 @@ who juggle several accounts, hubs and servers.
 - **Hubs** can be added, disabled and reordered by drag and drop.
 - **Multiple accounts** across different auth servers, including custom auth
   servers, two-factor authentication and offline play without authentication.
-- **Tokens stored in the OS keystore**: DPAPI on Windows, Keychain on macOS,
-  Secret Service on Linux.
 - **Client-side mods**: drop a `Content.*.dll` into the Mods section and enable it.
   If the engine sandbox rejects a mod, the launcher explains why and offers
   to launch without mods.
 - **Replays and content bundles** can be opened from a file or dropped onto the window.
-- **Incremental content downloads** with deduplication across servers and
-  versions, resuming interrupted downloads and cleanup of old versions.
-- **Engine builds are verified** by SHA-256 and the Space Wizards Ed25519
-  signature before use, and again by the loader before launch.
 - English and Russian interface, switchable without a restart.
 
 ## Installing
