@@ -1,5 +1,7 @@
 # SpaceWay Launcher
 
+![SpaceWay Launcher](docs/preview.gif)
+
 An unofficial launcher for [Space Station 14](https://spacestation14.com/).
 
 It connects to the same servers as the official launcher and uses the same
@@ -29,9 +31,6 @@ administrator rights and installs into `%LocalAppData%\Programs\SpaceWayLauncher
 
 Uninstalling removes the program but keeps accounts, favorites and downloaded
 content. Those can be cleared from the launcher settings.
-
-Only Windows builds are published for now. The code supports Linux and macOS,
-but those platforms have not been tested.
 
 ## Building
 
