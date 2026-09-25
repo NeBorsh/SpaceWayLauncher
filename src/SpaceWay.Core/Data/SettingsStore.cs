@@ -54,6 +54,9 @@ public static class SettingKeys
     public const string FilterHideEmpty = "filter.hide-empty";
     public const string FilterHideAdult = "filter.hide-adult";
     public const string FilterSort = "filter.sort";
+    public const string FilterLanguages = "filter.languages";
+    public const string FilterRolePlay = "filter.rp";
+    public const string FilterRegions = "filter.regions";
 
     public const string UpdatesCheck = "updates.check";
 }

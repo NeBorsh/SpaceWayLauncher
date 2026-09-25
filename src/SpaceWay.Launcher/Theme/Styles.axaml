@@ -198,6 +198,71 @@
         <Setter Property="Foreground" Value="{StaticResource BrushGold}" />
     </Style>
 
+    <Style Selector="ToggleButton.chip">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="9,4" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Name="Shape"
+                                       Fill="{TemplateBinding Background}"
+                                       Stroke="{TemplateBinding BorderBrush}"
+                                       StrokeThickness="1"
+                                       CornerSize="4" />
+                    <ContentPresenter Name="ContentHost"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="ToggleButton.chip:pointerover /template/ controls|AngleBox#Shape">
+        <Setter Property="Stroke" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip:checked /template/ controls|AngleBox#Shape">
+        <Setter Property="Fill" Value="{StaticResource BrushAccent}" />
+        <Setter Property="Stroke" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip:checked:pointerover /template/ controls|AngleBox#Shape">
+        <Setter Property="Fill" Value="{StaticResource BrushAccentHover}" />
+        <Setter Property="Stroke" Value="{StaticResource BrushAccentHover}" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip:pointerover /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip:pressed /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="TextBlock.chip-count">
+        <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}" />
+    </Style>
+
+    <Style Selector="ToggleButton.chip:checked TextBlock.chip-count">
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+    </Style>
+
     <Style Selector="CheckBox">
         <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
         <Setter Property="FontSize" Value="13" />

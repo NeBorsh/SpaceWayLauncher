@@ -35,6 +35,7 @@ public sealed partial class ServersViewModel : LocalizedViewModel
 
     private CancellationTokenSource? _inFlight;
     private bool _loadingSettings;
+    private bool _refreshingTags;
 
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private int _failedHubCount;
@@ -43,7 +44,7 @@ public sealed partial class ServersViewModel : LocalizedViewModel
     [ObservableProperty] private bool _hideEmpty;
     [ObservableProperty] private bool _hideAdultOnly;
     [ObservableProperty] private SortOption _selectedSort;
-    [ObservableProperty] private LanguageOption _selectedLanguageFilter;
+    [ObservableProperty] private bool _isTagPanelOpen;
 
     public ServersViewModel(
         ServerDirectory directory,
@@ -61,7 +62,15 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         _cards = cards;
 
         _selectedSort = SortOptions[0];
-        _selectedLanguageFilter = LanguageOptions[0];
+
+        LanguageTags = new TagGroup(
+            "filter-language", s => s.Languages, TagTitles.None, null, OnTagsChanged);
+        RolePlayTags = new TagGroup(
+            "filter-rp", s => s.RolePlayLevels, TagTitles.RolePlay, TagTitles.RolePlayOrder, OnTagsChanged);
+        RegionTags = new TagGroup(
+            "filter-region", s => s.Regions, TagTitles.Regions, null, OnTagsChanged);
+
+        TagGroups = [LanguageTags, RolePlayTags, RegionTags];
 
         LoadSettings();
     }
@@ -83,14 +92,20 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         new(ServerSort.RoundTime, "sort-round-time"),
     ];
 
-    /// <summary>
-    /// Languages for the filter. The first item is "any"; the rest come from tags
-    /// of servers actually received, since a fixed list would quickly go stale.
-    /// </summary>
-    public ObservableCollection<LanguageOption> LanguageOptions { get; } =
-    [
-        new(null, "filter-language-any"),
-    ];
+    public TagGroup LanguageTags { get; }
+
+    public TagGroup RolePlayTags { get; }
+
+    public TagGroup RegionTags { get; }
+
+    public IReadOnlyList<TagGroup> TagGroups { get; }
+
+    public int ActiveTagCount => TagGroups.Sum(g => g.Selected.Count);
+
+    /// <summary>The tag panel toggle shows how many tags are selected, so hidden filters are never forgotten.</summary>
+    public string TagsButtonText => ActiveTagCount > 0
+        ? Loc.T("filter-tags-active", ("count", ActiveTagCount))
+        : Loc.T("filter-tags");
 
     /// <summary>Number of servers received from hubs before filtering.</summary>
     public int TotalCount => _directory.Servers.Count;
@@ -137,7 +152,7 @@ public sealed partial class ServersViewModel : LocalizedViewModel
             await _directory.RefreshAsync(_hubs.Enabled, cts.Token);
 
             FailedHubCount = _directory.Failures.Count;
-            RefreshLanguageOptions();
+            RefreshTagOptions();
             Rebuild();
         }
         catch (OperationCanceledException)
@@ -163,8 +178,21 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         HideFull = false;
         HideEmpty = false;
         HideAdultOnly = false;
-        SelectedLanguageFilter = LanguageOptions[0];
         SelectedSort = SortOptions[0];
+
+        _refreshingTags = true;
+
+        try
+        {
+            foreach (var group in TagGroups)
+                group.Clear();
+        }
+        finally
+        {
+            _refreshingTags = false;
+        }
+
+        OnTagsChanged();
     }
 
     /// <summary>Recreates cards: new hub list or new sort order.</summary>
@@ -223,7 +251,9 @@ public sealed partial class ServersViewModel : LocalizedViewModel
             HideEmpty = HideEmpty,
             HideAdultOnly = HideAdultOnly,
             Sort = SelectedSort.Sort,
-            Languages = SelectedLanguageFilter.Code is { } code ? [code] : [],
+            Languages = LanguageTags.Selected,
+            RolePlayLevels = RolePlayTags.Selected,
+            Regions = RegionTags.Selected,
         };
     }
 
@@ -238,27 +268,51 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         OnPropertyChanged(nameof(EmptyByFilterText));
     }
 
-    private void RefreshLanguageOptions()
+    private void RefreshTagOptions()
     {
-        var languages = _directory.Servers
-            .Select(s => s.Language)
-            .Where(l => !string.IsNullOrEmpty(l))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Order(StringComparer.OrdinalIgnoreCase)
-            .ToList();
+        _refreshingTags = true;
 
-        var previous = SelectedLanguageFilter.Code;
-
-        LanguageOptions.Clear();
-        LanguageOptions.Add(new LanguageOption(null, "filter-language-any"));
-        foreach (var language in languages)
+        try
         {
-            LanguageOptions.Add(new LanguageOption(language, null));
+            var servers = _directory.Servers;
+
+            LanguageTags.Refresh(servers, KeepSelected(LanguageTags, SettingKeys.FilterLanguages));
+            RolePlayTags.Refresh(servers, KeepSelected(RolePlayTags, SettingKeys.FilterRolePlay));
+            RegionTags.Refresh(servers, KeepSelected(RegionTags, SettingKeys.FilterRegions));
+        }
+        finally
+        {
+            _refreshingTags = false;
         }
 
-        SelectedLanguageFilter = LanguageOptions.FirstOrDefault(o => o.Code == previous)
-                                 ?? LanguageOptions[0];
+        NotifyTagsChanged();
     }
+
+    /// <summary>The current selection, or the saved one before the first list arrives.</summary>
+    private IReadOnlyCollection<string> KeepSelected(TagGroup group, string key) =>
+        group.HasChips ? group.Selected : ReadList(key);
+
+    private IReadOnlyList<string> ReadList(string key) =>
+        _settings.Get(key)?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries) ?? [];
+
+    private void OnTagsChanged()
+    {
+        if (_refreshingTags)
+            return;
+
+        ApplyFilter();
+        SaveSettings();
+        NotifyTagsChanged();
+    }
+
+    private void NotifyTagsChanged()
+    {
+        OnPropertyChanged(nameof(ActiveTagCount));
+        OnPropertyChanged(nameof(TagsButtonText));
+    }
+
+    [RelayCommand]
+    private void ToggleTagPanel() => IsTagPanelOpen = !IsTagPanelOpen;
 
     private void LoadSettings()
     {
@@ -289,6 +343,15 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         _settings.SetBool(SettingKeys.FilterHideEmpty, HideEmpty);
         _settings.SetBool(SettingKeys.FilterHideAdult, HideAdultOnly);
         _settings.Set(SettingKeys.FilterSort, SelectedSort.Sort.ToString());
+
+        if (LanguageTags.HasChips)
+            _settings.Set(SettingKeys.FilterLanguages, string.Join(',', LanguageTags.Selected));
+
+        if (RolePlayTags.HasChips)
+            _settings.Set(SettingKeys.FilterRolePlay, string.Join(',', RolePlayTags.Selected));
+
+        if (RegionTags.HasChips)
+            _settings.Set(SettingKeys.FilterRegions, string.Join(',', RegionTags.Selected));
     }
 
     partial void OnSearchChanged(string value) => ApplyFilter();
@@ -304,8 +367,6 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         Rebuild();
         SaveSettings();
     }
-
-    partial void OnSelectedLanguageFilterChanged(LanguageOption value) => ApplyFilter();
 
     private void OnFilterChanged()
     {
@@ -323,16 +384,14 @@ public sealed partial class ServersViewModel : LocalizedViewModel
     {
         OnPropertyChanged(nameof(CountText));
         OnPropertyChanged(nameof(FailuresText));
+        OnPropertyChanged(nameof(TagsButtonText));
+
+        foreach (var group in TagGroups)
+            group.RefreshTitles();
     }
 }
 
 public sealed record SortOption(ServerSort Sort, string TitleKey)
 {
     public string Title => Loc.T(TitleKey);
-}
-
-/// <param name="TitleKey">Localization key; null shows the language code as is.</param>
-public sealed record LanguageOption(string? Code, string? TitleKey)
-{
-    public string Title => TitleKey != null ? Loc.T(TitleKey) : Code!.ToUpperInvariant();
 }

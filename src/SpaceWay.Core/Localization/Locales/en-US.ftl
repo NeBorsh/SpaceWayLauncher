@@ -47,7 +47,6 @@ filter-hide-full = Hide full
 filter-hide-empty = Hide empty
 filter-hide-adult = Hide 18+
 filter-language = Language
-filter-language-any = Any
 filter-reset = Reset
 
 ## Sorting
@@ -326,3 +325,29 @@ update-status-downloading = Downloading version { $version }…
 update-status-failed = Could not check for updates
 update-error-no-checksum = The release has no checksum for the installer, so it was not downloaded
 update-error-checksum-mismatch = The downloaded installer is damaged or was tampered with, so it was discarded
+
+## Tag filters
+filter-tags = Tags
+filter-tags-active = Tags: { $count }
+filter-rp = Role-play
+filter-region = Region
+tag-rp-none = No RP
+tag-rp-low = Low
+tag-rp-med = Medium
+tag-rp-high = High
+tag-region-eu_e = Europe East
+tag-region-eu_w = Europe West
+tag-region-am_n_e = North America East
+tag-region-am_n_w = North America West
+tag-region-am_n_c = North America Central
+tag-region-am_c = Central America
+tag-region-am_s_e = South America East
+tag-region-am_s_w = South America West
+tag-region-am_s_s = South America South
+tag-region-as_e = East Asia
+tag-region-as_n = North Asia
+tag-region-as_se = Southeast Asia
+tag-region-af_n = North Africa
+tag-region-af_c = Central Africa
+tag-region-af_s = Southern Africa
+tag-region-oce = Oceania

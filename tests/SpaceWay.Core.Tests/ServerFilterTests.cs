@@ -90,6 +90,71 @@ public sealed class ServerFilterTests
     }
 
     [Test]
+    public void RolePlayFilter_MatchesAnyListedLevel()
+    {
+        var servers = new[]
+        {
+            Server("Mixed", tags: ["rp:low", "rp:med", "rp:high"]),
+            Server("Low", tags: ["rp:low"]),
+            Server("Untagged"),
+        };
+
+        var result = new ServerFilter { RolePlayLevels = ["high"] }.Apply(servers);
+
+        Assert.That(result.Single().DisplayName, Is.EqualTo("Mixed"));
+    }
+
+    [Test]
+    public void TagGroups_CombineWithAnd()
+    {
+        var servers = new[]
+        {
+            Server("RuEast", tags: ["lang:ru", "region:eu_e"]),
+            Server("RuWest", tags: ["lang:ru", "region:eu_w"]),
+            Server("EnEast", tags: ["lang:en", "region:eu_e"]),
+        };
+
+        var result = new ServerFilter { Languages = ["ru"], Regions = ["eu_e"] }.Apply(servers);
+
+        Assert.That(result.Single().DisplayName, Is.EqualTo("RuEast"));
+    }
+
+    [Test]
+    public void SelectedValues_WithinGroup_CombineWithOr()
+    {
+        var servers = new[]
+        {
+            Server("Ru", tags: ["lang:ru"]),
+            Server("En", tags: ["lang:en"]),
+            Server("De", tags: ["lang:de"]),
+        };
+
+        var result = new ServerFilter { Languages = ["ru", "en"] }.Apply(servers).Select(s => s.DisplayName);
+
+        Assert.That(result, Is.EquivalentTo(new[] { "Ru", "En" }));
+    }
+
+    [Test]
+    public void TagAliases_AreResolved()
+    {
+        var server = Server("Aliased", tags: ["rp:MEDIUM", "rp:mrp", "rp:HRP", "region:us_e"]);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(server.RolePlayLevels, Is.EquivalentTo(new[] { "med", "high" }));
+            Assert.That(server.Regions, Is.EquivalentTo(new[] { "am_n_e" }));
+        });
+    }
+
+    [Test]
+    public void TagValues_IgnoreCase()
+    {
+        var servers = new[] { Server("Upper", tags: ["LANG:RU"]) };
+
+        Assert.That(new ServerFilter { Languages = ["ru"] }.Apply(servers), Is.Not.Empty);
+    }
+
+    [Test]
     public void HideAdult_WorksByTag()
     {
         var servers = new[] { Server("Взрослый", tags: ["18+"]), Server("Обычный") };

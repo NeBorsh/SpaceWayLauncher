@@ -26,38 +26,76 @@
 
         <controls:AngleCard Grid.Row="1" Margin="0,0,0,10">
             <StackPanel Spacing="10">
-                <Grid ColumnDefinitions="*,Auto,Auto">
+                <Grid ColumnDefinitions="*,Auto">
                     <TextBox Grid.Column="0"
                              Text="{Binding Search}"
                              Watermark="{loc:Translate filter-search-placeholder}" />
 
                     <ComboBox Grid.Column="1"
                               Margin="8,0,0,0"
-                              MinWidth="150"
+                              MinWidth="170"
                               ItemsSource="{Binding SortOptions}"
                               SelectedItem="{Binding SelectedSort}"
                               DisplayMemberBinding="{Binding Title}" />
-
-                    <ComboBox Grid.Column="2"
-                              Margin="8,0,0,0"
-                              MinWidth="110"
-                              ItemsSource="{Binding LanguageOptions}"
-                              SelectedItem="{Binding SelectedLanguageFilter}"
-                              DisplayMemberBinding="{Binding Title}" />
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Spacing="16">
-                    <CheckBox IsChecked="{Binding HideFull}"
-                              Content="{loc:Translate filter-hide-full}" />
-                    <CheckBox IsChecked="{Binding HideEmpty}"
-                              Content="{loc:Translate filter-hide-empty}" />
-                    <CheckBox IsChecked="{Binding HideAdultOnly}"
-                              Content="{loc:Translate filter-hide-adult}" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="16">
+                        <CheckBox IsChecked="{Binding HideFull}"
+                                  Content="{loc:Translate filter-hide-full}" />
+                        <CheckBox IsChecked="{Binding HideEmpty}"
+                                  Content="{loc:Translate filter-hide-empty}" />
+                        <CheckBox IsChecked="{Binding HideAdultOnly}"
+                                  Content="{loc:Translate filter-hide-adult}" />
+                    </StackPanel>
 
-                    <Button Classes="subtle"
-                            Command="{Binding ResetFiltersCommand}"
-                            Content="{loc:Translate filter-reset}" />
-                </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                        <ToggleButton Classes="chip"
+                                      IsChecked="{Binding IsTagPanelOpen}"
+                                      Content="{Binding TagsButtonText}" />
+
+                        <Button Classes="subtle"
+                                Command="{Binding ResetFiltersCommand}"
+                                Content="{loc:Translate filter-reset}" />
+                    </StackPanel>
+                </Grid>
+
+                <ItemsControl IsVisible="{Binding IsTagPanelOpen}"
+                              ItemsSource="{Binding TagGroups}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:TagGroup">
+                            <Grid ColumnDefinitions="90,*"
+                                  Margin="0,0,0,4"
+                                  IsVisible="{Binding HasChips}">
+                                <TextBlock Grid.Column="0"
+                                           Classes="muted"
+                                           Margin="0,5,0,0"
+                                           VerticalAlignment="Top"
+                                           Text="{Binding Title}" />
+
+                                <ItemsControl Grid.Column="1" ItemsSource="{Binding Chips}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="vm:TagChip">
+                                            <ToggleButton Classes="chip"
+                                                          Margin="0,0,6,6"
+                                                          IsChecked="{Binding IsSelected}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <TextBlock Text="{Binding Title}" />
+                                                    <TextBlock Classes="chip-count" Text="{Binding Count}" />
+                                                </StackPanel>
+                                            </ToggleButton>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </controls:AngleCard>
 

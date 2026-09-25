@@ -49,7 +49,6 @@ filter-hide-full = Скрыть полные
 filter-hide-empty = Скрыть пустые
 filter-hide-adult = Скрыть 18+
 filter-language = Язык
-filter-language-any = Любой
 filter-reset = Сбросить
 
 ## Сортировка
@@ -334,3 +333,29 @@ update-status-downloading = Загружаем версию { $version }…
 update-status-failed = Не удалось проверить обновления
 update-error-no-checksum = В релизе нет контрольной суммы установщика, поэтому он не загружен
 update-error-checksum-mismatch = Загруженный установщик повреждён или подменён, поэтому он удалён
+
+## Фильтры по тегам
+filter-tags = Теги
+filter-tags-active = Теги: { $count }
+filter-rp = Отыгрыш
+filter-region = Регион
+tag-rp-none = Без РП
+tag-rp-low = Низкий
+tag-rp-med = Средний
+tag-rp-high = Высокий
+tag-region-eu_e = Восточная Европа
+tag-region-eu_w = Западная Европа
+tag-region-am_n_e = Восток Северной Америки
+tag-region-am_n_w = Запад Северной Америки
+tag-region-am_n_c = Центр Северной Америки
+tag-region-am_c = Центральная Америка
+tag-region-am_s_e = Восток Южной Америки
+tag-region-am_s_w = Запад Южной Америки
+tag-region-am_s_s = Юг Южной Америки
+tag-region-as_e = Восточная Азия
+tag-region-as_n = Северная Азия
+tag-region-as_se = Юго-Восточная Азия
+tag-region-af_n = Северная Африка
+tag-region-af_c = Центральная Африка
+tag-region-af_s = Южная Африка
+tag-region-oce = Океания

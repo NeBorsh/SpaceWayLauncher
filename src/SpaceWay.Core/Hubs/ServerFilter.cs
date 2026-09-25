@@ -41,6 +41,12 @@ public sealed record ServerFilter
     /// </summary>
     public IReadOnlyList<string> Languages { get; init; } = [];
 
+    /// <summary>Role-play levels from tags like <c>rp:med</c>. An empty set means no filtering.</summary>
+    public IReadOnlyList<string> RolePlayLevels { get; init; } = [];
+
+    /// <summary>Regions from tags like <c>region:eu_e</c>. An empty set means no filtering.</summary>
+    public IReadOnlyList<string> Regions { get; init; } = [];
+
     public ServerSort Sort { get; init; } = ServerSort.Players;
 
     public IEnumerable<MergedServer> Apply(IEnumerable<MergedServer> servers) => Order(servers.Where(Matches));
@@ -79,8 +85,12 @@ public sealed record ServerFilter
         if (HideAdultOnly && server.IsAdultOnly)
             return false;
 
-        if (Languages.Count > 0 && !Languages.Contains(server.Language ?? string.Empty))
+        if (!AnyOf(Languages, server.Languages)
+            || !AnyOf(RolePlayLevels, server.RolePlayLevels)
+            || !AnyOf(Regions, server.Regions))
+        {
             return false;
+        }
 
         if (Search.Length > 0)
         {
@@ -94,4 +104,8 @@ public sealed record ServerFilter
 
         return true;
     }
+
+    /// <summary>Nothing selected passes everything; otherwise the server needs one of the selected values.</summary>
+    private static bool AnyOf(IReadOnlyList<string> selected, IReadOnlyList<string> values) =>
+        selected.Count == 0 || values.Any(v => selected.Contains(v, StringComparer.OrdinalIgnoreCase));
 }

@@ -95,9 +95,11 @@ public sealed record MergedServer(
 
     public bool IsAdultOnly => AllTags.Contains(ServerTags.AdultOnly, StringComparer.OrdinalIgnoreCase);
 
-    public string? Language => ServerTags.Language(AllTags);
+    public IReadOnlyList<string> Languages => ServerTags.Languages(AllTags);
 
-    public string? RolePlay => ServerTags.RolePlay(AllTags);
+    public IReadOnlyList<string> RolePlayLevels => ServerTags.RolePlayLevels(AllTags);
+
+    public IReadOnlyList<string> Regions => ServerTags.Regions(AllTags);
 
     /// <summary>
     /// How long the current round has been running. Null if the round has not
