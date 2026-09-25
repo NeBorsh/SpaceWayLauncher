@@ -108,11 +108,32 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <Button Grid.Row="2"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"
-                        Click="OpenBundleClicked"
-                        Content="{loc:Translate bundle-open}" />
+                <StackPanel Grid.Row="2" Spacing="10">
+                    <controls:AngleCard Classes="warning"
+                                        Padding="10,8"
+                                        IsVisible="{Binding Updates.IsNoticeVisible}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="{Binding Updates.NoticeText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap" />
+
+                            <Button Classes="link"
+                                    IsVisible="{Binding Updates.IsReady}"
+                                    Command="{Binding Updates.OpenReleaseCommand}"
+                                    Content="{loc:Translate update-whats-new}" />
+
+                            <Button Classes="link"
+                                    IsVisible="{Binding Updates.IsManual}"
+                                    Command="{Binding Updates.OpenReleaseCommand}"
+                                    Content="{loc:Translate update-download}" />
+                        </StackPanel>
+                    </controls:AngleCard>
+
+                    <Button HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="OpenBundleClicked"
+                            Content="{loc:Translate bundle-open}" />
+                </StackPanel>
 
             </Grid>
         </Border>

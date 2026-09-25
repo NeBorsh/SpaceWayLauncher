@@ -309,3 +309,19 @@ auth-server-address-invalid = This does not look like an auth server address
 auth-server-address-insecure = Plain http would send your password unencrypted. Use https, or http only for localhost
 auth-server-duplicate = This auth server has already been added
 auth-server-add-submit = Add
+
+## Launcher updates
+settings-updates = Updates
+settings-updates-current = Current version: { $version }
+settings-updates-check = Check for updates on startup
+settings-updates-check-now = Check now
+update-available = Version { $version } is available
+update-ready = Version { $version } is ready. Close the launcher to install it
+update-whats-new = What's new
+update-download = Download
+update-status-checking = Checking for updates…
+update-status-up-to-date = You have the latest version
+update-status-downloading = Downloading version { $version }…
+update-status-failed = Could not check for updates
+update-error-no-checksum = The release has no checksum for the installer, so it was not downloaded
+update-error-checksum-mismatch = The downloaded installer is damaged or was tampered with, so it was discarded

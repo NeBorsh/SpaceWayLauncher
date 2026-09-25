@@ -54,4 +54,6 @@ public static class SettingKeys
     public const string FilterHideEmpty = "filter.hide-empty";
     public const string FilterHideAdult = "filter.hide-adult";
     public const string FilterSort = "filter.sort";
+
+    public const string UpdatesCheck = "updates.check";
 }

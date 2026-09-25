@@ -29,7 +29,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
             services.FavoritesService, services.Directory, Dialogs, ConnectToServer, cards);
         Accounts = new AccountsViewModel(services.AccountManager, Dialogs);
         HubsSection = new HubsViewModel(services.HubManager, Dialogs);
-        Settings = new SettingsViewModel(services.Settings, services.ContentUpdater, Dialogs);
+        Updates = new UpdatesViewModel(services.Updates, services.Settings);
+        Settings = new SettingsViewModel(services.Settings, services.ContentUpdater, Dialogs, Updates);
         Mods = new ModsViewModel(services.Mods, Dialogs);
 
         Sections =
@@ -56,6 +57,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public SettingsViewModel Settings { get; }
 
     public ModsViewModel Mods { get; }
+
+    public UpdatesViewModel Updates { get; }
 
     /// <summary>Modal dialogs over the main window.</summary>
     public DialogService Dialogs { get; } = new();

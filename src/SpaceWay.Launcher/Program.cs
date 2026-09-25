@@ -1,11 +1,15 @@
 using Avalonia;
 using Serilog;
 using SpaceWay.Core;
+using SpaceWay.Core.Updates;
 
 namespace SpaceWay.Launcher;
 
 internal static class Program
 {
+    /// <summary>Downloaded launcher installer to run once the launcher has exited.</summary>
+    public static string? PendingInstaller { get; set; }
+
     [STAThread]
     public static void Main(string[] args)
     {
@@ -38,7 +42,7 @@ internal static class Program
             e.SetObserved();
         };
 
-        using var single = SingleInstance();
+        var single = SingleInstance();
         if (single == null)
         {
             Log.Information("Launcher is already running");
@@ -56,6 +60,21 @@ internal static class Program
         }
         finally
         {
+            single.ReleaseMutex();
+            single.Dispose();
+
+            if (PendingInstaller != null)
+            {
+                try
+                {
+                    UpdateService.StartInstaller(PendingInstaller);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e, "Failed to start launcher update");
+                }
+            }
+
             Log.CloseAndFlush();
         }
     }

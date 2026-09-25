@@ -8,6 +8,7 @@ using SpaceWay.Core.Favorites;
 using SpaceWay.Core.Hubs;
 using SpaceWay.Core.Localization;
 using SpaceWay.Core.Mods;
+using SpaceWay.Core.Updates;
 
 namespace SpaceWay.Launcher;
 
@@ -17,7 +18,7 @@ namespace SpaceWay.Launcher;
 /// </summary>
 public sealed class LauncherServices : IDisposable
 {
-    private const string UserAgent = "SpaceWayLauncher/0.1";
+    private static readonly string UserAgent = $"SpaceWayLauncher/{LauncherVersion.CurrentText}";
 
     public LauncherServices(string? databasePath = null)
     {
@@ -57,6 +58,9 @@ public sealed class LauncherServices : IDisposable
         AccountManager = new AccountManager(Accounts, Tokens, new AuthApi(Http), Settings);
 
         ModOverlay = new ModOverlay(Mods);
+
+        Updates = new UpdateService(
+            new GitHubReleases(Http), DownloadHttp, LauncherPaths.DirUpdates, LauncherPaths.IsInstalled);
 
         ServerApi = new ServerApi(Http);
         ServerInfo = new ServerInfoCache(ServerApi);
@@ -98,6 +102,7 @@ public sealed class LauncherServices : IDisposable
     public ServerInfoCache ServerInfo { get; }
     public ITokenStore Tokens { get; }
     public AccountManager AccountManager { get; }
+    public UpdateService Updates { get; }
 
     /// <summary>Applies the saved language, if any.</summary>
     public void ApplySavedLanguage()

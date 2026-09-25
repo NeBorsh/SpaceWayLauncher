@@ -58,6 +58,41 @@
                 </controls:AngleCard>
 
                 <controls:AngleCard Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="h2" Text="{loc:Translate settings-updates}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Updates.CurrentVersionText}" />
+                                <TextBlock Classes="muted"
+                                           Classes.expired="{Binding Updates.IsFailed}"
+                                           IsVisible="{Binding Updates.HasStatus}"
+                                           TextWrapping="Wrap"
+                                           Text="{Binding Updates.StatusText}" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                <Button Classes="subtle"
+                                        IsVisible="{Binding Updates.IsNoticeVisible}"
+                                        Command="{Binding Updates.OpenReleaseCommand}"
+                                        Content="{loc:Translate update-whats-new}" />
+
+                                <Button Classes="subtle"
+                                        IsEnabled="{Binding !Updates.IsBusy}"
+                                        Command="{Binding Updates.CheckNowCommand}"
+                                        Content="{loc:Translate settings-updates-check-now}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <CheckBox IsChecked="{Binding Updates.CheckEnabled}"
+                                  Content="{loc:Translate settings-updates-check}" />
+                    </StackPanel>
+                </controls:AngleCard>
+
+                <controls:AngleCard Classes="card">
                     <StackPanel Spacing="12">
                         <TextBlock Classes="h2" Text="{loc:Translate settings-data}" />
 

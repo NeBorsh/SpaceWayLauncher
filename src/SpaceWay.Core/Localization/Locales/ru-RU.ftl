@@ -317,3 +317,19 @@ auth-server-address-invalid = Это не похоже на адрес серв�
 auth-server-address-insecure = По http пароль передаётся без шифрования. Используйте https — http допустим только для localhost
 auth-server-duplicate = Этот сервер авторизации уже добавлен
 auth-server-add-submit = Добавить
+
+## Обновления лаунчера
+settings-updates = Обновления
+settings-updates-current = Текущая версия: { $version }
+settings-updates-check = Проверять обновления при запуске
+settings-updates-check-now = Проверить сейчас
+update-available = Доступна версия { $version }
+update-ready = Версия { $version } загружена. Закройте лаунчер, чтобы установить её
+update-whats-new = Что нового
+update-download = Скачать
+update-status-checking = Проверяем обновления…
+update-status-up-to-date = Установлена последняя версия
+update-status-downloading = Загружаем версию { $version }…
+update-status-failed = Не удалось проверить обновления
+update-error-no-checksum = В релизе нет контрольной суммы установщика, поэтому он не загружен
+update-error-checksum-mismatch = Загруженный установщик повреждён или подменён, поэтому он удалён

@@ -30,8 +30,10 @@ public sealed partial class SettingsViewModel : LocalizedViewModel
     public SettingsViewModel(
         SettingsStore settings,
         ContentUpdater content,
-        DialogService dialogs)
+        DialogService dialogs,
+        UpdatesViewModel updates)
     {
+        Updates = updates;
         _settings = settings;
         _content = content;
         _dialogs = dialogs;
@@ -42,6 +44,8 @@ public sealed partial class SettingsViewModel : LocalizedViewModel
 
         _ = RefreshStorage();
     }
+
+    public UpdatesViewModel Updates { get; }
 
     public IReadOnlyList<LanguageInfo> Languages => Loc.Available;
 

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using SpaceWay.Core.Data;
 using SpaceWay.Launcher.ViewModels;
 using SpaceWay.Launcher.Views;
 
@@ -19,7 +20,11 @@ public sealed class App : Application
             _services = new LauncherServices();
             _services.ApplySavedLanguage();
 
-            desktop.Exit += (_, _) => _services.Dispose();
+            desktop.Exit += (_, _) =>
+            {
+                Program.PendingInstaller = _services.Updates.PendingInstaller();
+                _services.Dispose();
+            };
 
             var viewModel = new MainWindowViewModel(_services);
 
@@ -30,6 +35,9 @@ public sealed class App : Application
 
             _ = viewModel.Servers.RefreshAsync();
             _ = viewModel.OfferSignInAsync();
+
+            if (_services.Settings.GetBool(SettingKeys.UpdatesCheck, true))
+                _ = _services.Updates.Check();
         }
 
         base.OnFrameworkInitializationCompleted();
