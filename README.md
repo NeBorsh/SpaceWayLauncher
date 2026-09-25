@@ -1,6 +1,6 @@
 # SpaceWay Launcher
 
-![SpaceWay Launcher](docs/preview.gif)
+![SpaceWay Launcher](docs/preview.png)
 
 An unofficial launcher for [Space Station 14](https://spacestation14.com/).
 
