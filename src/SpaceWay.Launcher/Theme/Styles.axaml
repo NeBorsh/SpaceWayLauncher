@@ -322,41 +322,131 @@
     </Style>
 
     <Style Selector="ComboBox">
-        <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Background" Value="{StaticResource BrushBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
         <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="11,6,10,6" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="MaxDropDownHeight" Value="420" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Name="Frame"
+                                       Fill="{TemplateBinding Background}"
+                                       Stroke="{TemplateBinding BorderBrush}"
+                                       StrokeThickness="1"
+                                       CornerSize="6" />
+
+                    <Grid ColumnDefinitions="*,Auto" Margin="{TemplateBinding Padding}">
+                        <ContentPresenter Grid.Column="0"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          TextBlock.Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+
+                        <Path Name="Chevron"
+                              Grid.Column="1"
+                              Data="M 0,0 L 5,5 L 10,0"
+                              Stroke="{StaticResource BrushTextMuted}"
+                              StrokeThickness="1.6"
+                              Width="10" Height="6"
+                              Margin="12,0,0,0"
+                              VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Popup Name="PART_Popup"
+                           IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                           MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                           MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                           PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                           Placement="BottomEdgeAlignedLeft"
+                           VerticalOffset="4"
+                           IsLightDismissEnabled="True"
+                           InheritsTransform="True">
+                        <Panel>
+                            <controls:AngleBox Fill="{StaticResource BrushSurface}"
+                                               Stroke="{StaticResource BrushControl}"
+                                               StrokeThickness="1"
+                                               CornerSize="8" />
+
+                            <ScrollViewer Margin="0,5" HorizontalScrollBarVisibility="Disabled">
+                                <ItemsPresenter Name="PART_ItemsPresenter"
+                                                ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            </ScrollViewer>
+                        </Panel>
+                    </Popup>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
     </Style>
 
-    <Style Selector="ComboBox:pointerover /template/ Border#Background">
-        <Setter Property="Background" Value="{StaticResource BrushSurfaceHover}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrushControlHover}" />
+    <Style Selector="ComboBox:pointerover /template/ controls|AngleBox#Frame">
+        <Setter Property="Stroke" Value="{StaticResource BrushControlHover}" />
     </Style>
 
-    <Style Selector="ComboBox /template/ Border#PopupBorder">
-        <Setter Property="Background" Value="{StaticResource BrushSurface}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="0" />
+    <Style Selector="ComboBox:dropdownopen /template/ controls|AngleBox#Frame">
+        <Setter Property="Stroke" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="ComboBox:pointerover /template/ Path#Chevron">
+        <Setter Property="Stroke" Value="{StaticResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBox:dropdownopen /template/ Path#Chevron">
+        <Setter Property="RenderTransform" Value="rotate(180deg)" />
     </Style>
 
     <Style Selector="ComboBoxItem">
-        <Setter Property="CornerRadius" Value="0" />
-        <Setter Property="Padding" Value="10,7" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Margin" Value="5,1" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Name="Shape" Fill="Transparent" CornerSize="4" />
+                    <ContentPresenter Name="ContentHost"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
     </Style>
 
-    <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource BrushControlHover}" />
+    <Style Selector="ComboBoxItem /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 
-    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource BrushAccent}" />
+    <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 
-    <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{StaticResource BrushAccentHover}" />
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:focus /template/ ContentPresenter#ContentHost">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:pointerover /template/ controls|AngleBox#Shape">
+        <Setter Property="Fill" Value="{StaticResource BrushControl}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:selected /template/ controls|AngleBox#Shape">
+        <Setter Property="Fill" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:selected:pointerover /template/ controls|AngleBox#Shape">
+        <Setter Property="Fill" Value="{StaticResource BrushAccentHover}" />
     </Style>
 
     <Style Selector="ListBox.nav">
