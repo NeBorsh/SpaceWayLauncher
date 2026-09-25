@@ -39,25 +39,27 @@ public sealed partial class AccountSwitcherViewModel : LocalizedViewModel
 
     protected override void OnLanguageChanged() => Reload();
 
+    /// <summary>
+    /// Rebuilds the list only when the accounts themselves changed. Selecting an account also
+    /// raises <see cref="AccountManager.Changed"/>, and replacing the items in the middle of
+    /// a selection would leave the dropdown empty.
+    /// </summary>
     private void Reload()
     {
         _reloading = true;
 
         try
         {
-            Choices.Clear();
+            var choices = _accounts.Accounts
+                .Select(account => new AccountChoice(account, ServerNameOf(account)))
+                .ToList();
 
-            foreach (var account in _accounts.Accounts)
+            if (!choices.SequenceEqual(Choices))
             {
-                var server = _accounts.FindServer(account.AuthServerId);
-                var serverName = server switch
-                {
-                    null => Loc.T("accounts-unknown-server"),
-                    { IsOffline: true } => Loc.T("accounts-offline-badge"),
-                    _ => server.DisplayName,
-                };
+                Choices.Clear();
 
-                Choices.Add(new AccountChoice(account, serverName));
+                foreach (var choice in choices)
+                    Choices.Add(choice);
             }
 
             var selectedKey = _accounts.Selected?.SecretKey;
@@ -70,6 +72,13 @@ public sealed partial class AccountSwitcherViewModel : LocalizedViewModel
 
         OnPropertyChanged(nameof(HasAccounts));
     }
+
+    private string ServerNameOf(Account account) => _accounts.FindServer(account.AuthServerId) switch
+    {
+        null => Loc.T("accounts-unknown-server"),
+        { IsOffline: true } => Loc.T("accounts-offline-badge"),
+        var server => server.DisplayName,
+    };
 }
 
 public sealed record AccountChoice(Account Account, string ServerName)

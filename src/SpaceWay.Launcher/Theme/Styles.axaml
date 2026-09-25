@@ -386,6 +386,17 @@
         <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
     </Style>
 
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushControlHover}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
     <Style Selector="ComboBox">
         <Setter Property="Background" Value="{StaticResource BrushBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
@@ -445,6 +456,11 @@
                 </Panel>
             </ControlTemplate>
         </Setter>
+    </Style>
+
+    <Style Selector="ComboBox.up /template/ Popup#PART_Popup">
+        <Setter Property="Placement" Value="TopEdgeAlignedLeft" />
+        <Setter Property="VerticalOffset" Value="-4" />
     </Style>
 
     <Style Selector="ComboBox:pointerover /template/ controls|AngleBox#Frame">
