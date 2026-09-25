@@ -8,6 +8,21 @@ public static class LauncherPaths
 {
     private const string AppDirName = "SpaceWayLauncher";
 
+    /// <summary>
+    /// Portable mode: a <c>portable</c> file next to the executable keeps all data
+    /// in a <c>data</c> folder beside it instead of the user profile.
+    /// </summary>
+    public static bool IsPortable { get; } =
+        File.Exists(Path.Combine(AppContext.BaseDirectory, "portable"));
+
+    /// <summary>
+    /// Installed by the Windows installer, which leaves its uninstaller next to the launcher.
+    /// Only such copies update themselves.
+    /// </summary>
+    public static bool IsInstalled { get; } = OperatingSystem.IsWindows()
+        && !IsPortable
+        && File.Exists(Path.Combine(AppContext.BaseDirectory, "unins000.exe"));
+
     /// <summary>Settings, favorites, accounts.</summary>
     public static string DirUserData { get; } = GetUserDataDir();
 
@@ -17,6 +32,9 @@ public static class LauncherPaths
     public static string DirEngineInstallations { get; } = Path.Combine(DirLocalData, "engines");
     public static string DirModuleInstallations { get; } = Path.Combine(DirLocalData, "modules");
     public static string DirLogs { get; } = Path.Combine(DirLocalData, "logs");
+
+    /// <summary>Downloaded launcher installers.</summary>
+    public static string DirUpdates { get; } = Path.Combine(DirLocalData, "updates");
 
     /// <summary>User mod assemblies.</summary>
     public static string DirMods { get; } = Path.Combine(DirUserData, "mods");
@@ -68,6 +86,9 @@ public static class LauncherPaths
 
     private static string GetUserDataDir()
     {
+        if (IsPortable)
+            return Path.Combine(AppContext.BaseDirectory, "data");
+
         if (OperatingSystem.IsWindows())
             return Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppDirName);
@@ -82,6 +103,9 @@ public static class LauncherPaths
 
     private static string GetLocalDataDir()
     {
+        if (IsPortable)
+            return Path.Combine(AppContext.BaseDirectory, "data");
+
         if (OperatingSystem.IsWindows())
             return Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppDirName);
