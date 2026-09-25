@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Avalonia;
 using Serilog;
 using SpaceWay.Core;
+using SpaceWay.Core.Connecting;
 using SpaceWay.Core.Updates;
 
 namespace SpaceWay.Launcher;
@@ -9,6 +11,11 @@ internal static class Program
 {
     /// <summary>Downloaded launcher installer to run once the launcher has exited.</summary>
     public static string? PendingInstaller { get; set; }
+
+    /// <summary>Server from the command line to connect to on startup.</summary>
+    public static Uri? StartupConnect { get; private set; }
+
+    public static SingleInstance? Instance { get; private set; }
 
     [STAThread]
     public static void Main(string[] args)
@@ -42,12 +49,26 @@ internal static class Program
             e.SetObserved();
         };
 
-        var single = SingleInstance();
-        if (single == null)
+        if (SingleInstance.WaitForUpdateInstaller() && Environment.ProcessPath is { } self)
         {
-            Log.Information("Launcher is already running");
+            Log.Information("Restarting after the launcher update");
+            RestartSelf(self, args);
             return;
         }
+
+        StartupConnect = LaunchArguments.ConnectTarget(args);
+
+        var single = SingleInstance.TryAcquire();
+        if (single == null)
+        {
+            Log.Information("Launcher is already running, forwarding the request");
+            SingleInstance.Forward(StartupConnect != null
+                ? SingleInstance.ConnectPrefix + StartupConnect.AbsoluteUri
+                : SingleInstance.ActivateMessage);
+            return;
+        }
+
+        Instance = single;
 
         try
         {
@@ -60,7 +81,6 @@ internal static class Program
         }
         finally
         {
-            single.ReleaseMutex();
             single.Dispose();
 
             if (PendingInstaller != null)
@@ -79,18 +99,14 @@ internal static class Program
         }
     }
 
-    /// <summary>
-    /// Claims the single-instance slot, or fails if another launcher holds it.
-    /// </summary>
-    private static Mutex? SingleInstance()
+    private static void RestartSelf(string path, string[] args)
     {
-        var mutex = new Mutex(initiallyOwned: true, "SpaceWayLauncher", out var mine);
+        var start = new ProcessStartInfo(path) { UseShellExecute = false };
 
-        if (mine)
-            return mutex;
+        foreach (var arg in args)
+            start.ArgumentList.Add(arg);
 
-        mutex.Dispose();
-        return null;
+        Process.Start(start)?.Dispose();
     }
 
     public static AppBuilder BuildAvaloniaApp()

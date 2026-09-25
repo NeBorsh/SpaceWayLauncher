@@ -1,4 +1,4 @@
-#ifndef AppVersion
+﻿#ifndef AppVersion
   #define AppVersion "0.0.0"
 #endif
 
@@ -33,6 +33,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 
 AppMutex=SpaceWayLauncher
+SetupMutex=SpaceWayLauncherSetup
 
 [Languages]
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
@@ -40,6 +41,21 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; Flags: unchecked
+Name: "links"; Description: "{cm:OpenServerLinks}"
+
+[CustomMessages]
+english.OpenServerLinks=Open ss14:// server links in SpaceWay Launcher
+russian.OpenServerLinks=Открывать ссылки на серверы ss14:// в SpaceWay Launcher
+
+[Registry]
+Root: HKCU; Subkey: "Software\Classes\ss14"; ValueType: string; ValueName: ""; ValueData: "URL:Space Station 14"; Flags: uninsdeletekey; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExe}"",0"; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExe}"" ""%1"""; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14s"; ValueType: string; ValueName: ""; ValueData: "URL:Space Station 14"; Flags: uninsdeletekey; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14s"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14s\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExe}"",0"; Tasks: links
+Root: HKCU; Subkey: "Software\Classes\ss14s\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExe}"" ""%1"""; Tasks: links
 
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs

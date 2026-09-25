@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using SpaceWay.Core.Data;
 using SpaceWay.Launcher.ViewModels;
 using SpaceWay.Launcher.Views;
@@ -28,18 +30,42 @@ public sealed class App : Application
 
             var viewModel = new MainWindowViewModel(_services);
 
-            desktop.MainWindow = new MainWindow
+            var window = new MainWindow
             {
                 DataContext = viewModel,
             };
 
+            desktop.MainWindow = window;
+
+            Program.Instance?.Listen(message =>
+                Dispatcher.UIThread.Post(() => OnForwarded(message, window, viewModel)));
+
             _ = viewModel.Servers.RefreshAsync();
-            _ = viewModel.OfferSignInAsync();
+
+            if (Program.StartupConnect is { } target)
+                _ = viewModel.ConnectFromLinkAsync(target);
+            else
+                _ = viewModel.OfferSignInAsync();
 
             if (_services.Settings.GetBool(SettingKeys.UpdatesCheck, true))
                 _ = _services.Updates.Check();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>A later launch asked to show the window or to connect to a server.</summary>
+    private static void OnForwarded(string message, Window window, MainWindowViewModel viewModel)
+    {
+        if (window.WindowState == WindowState.Minimized)
+            window.WindowState = WindowState.Normal;
+
+        window.Activate();
+
+        if (message.StartsWith(SingleInstance.ConnectPrefix, StringComparison.Ordinal)
+            && Uri.TryCreate(message[SingleInstance.ConnectPrefix.Length..], UriKind.Absolute, out var target))
+        {
+            _ = viewModel.ConnectFromLinkAsync(target);
+        }
     }
 }

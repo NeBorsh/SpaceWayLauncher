@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Serilog;
 using SpaceWay.Core.Data;
 using SpaceWay.Launcher.Theme;
 
@@ -93,6 +94,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         await connection.Run();
         await shown;
+    }
+
+    /// <summary>
+    /// Connects to a server from an <c>ss14://</c> link or a reconnect request from the game.
+    /// Ignored while another dialog is open, so it never interrupts a connection in progress.
+    /// </summary>
+    public async Task ConnectFromLinkAsync(Uri address)
+    {
+        if (Dialogs.IsOpen)
+        {
+            Log.Information("Ignoring link to {Address}: a dialog is open", address);
+            return;
+        }
+
+        var name = _services.Directory.Find(address.AbsoluteUri)?.DisplayName ?? address.Host;
+
+        await ConnectToServer(address.AbsoluteUri, name);
     }
 
     /// <summary>Add-account wizard. True if an account was added.</summary>
