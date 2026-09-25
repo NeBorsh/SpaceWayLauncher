@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             xmlns:controls="using:SpaceWay.Launcher.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SpaceWay.Launcher.Views.FavoritesView"
+             x:DataType="vm:FavoritesViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,12">
+            <TextBlock Classes="h1" Text="{loc:Translate nav-favorites}" />
+            <TextBlock Classes="muted" Text="{Binding CountText}" />
+        </StackPanel>
+
+        <Button Grid.Row="1"
+                Classes="accent"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,14"
+                Command="{Binding AddServerCommand}"
+                Content="{loc:Translate favorites-add}" />
+
+        <Panel Grid.Row="2">
+            <StackPanel IsVisible="{Binding IsEmpty}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="6">
+                <TextBlock Classes="h2"
+                           HorizontalAlignment="Center"
+                           Text="{loc:Translate favorites-empty}" />
+                <TextBlock Classes="muted"
+                           HorizontalAlignment="Center"
+                           Text="{loc:Translate favorites-hint}" />
+                <TextBlock Classes="muted"
+                           HorizontalAlignment="Center"
+                           Text="{loc:Translate favorites-hint-manual}" />
+            </StackPanel>
+
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl Classes="cards"
+                              ItemsSource="{Binding Items}"
+                              ItemTemplate="{StaticResource ServerCardTemplate}"
+                              Margin="0,0,6,0">
+                    <ItemsControl.Styles>
+                        <Style Selector="ItemsControl.cards > ContentPresenter">
+                            <Setter Property="Margin" Value="0,0,0,8" />
+                        </Style>
+                    </ItemsControl.Styles>
+                </ItemsControl>
+            </ScrollViewer>
+        </Panel>
+    </Grid>
+</UserControl>

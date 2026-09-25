@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <AssemblyName>SpaceWay.Loader</AssemblyName>
+
+        <ApplicationIcon>..\SpaceWay.Launcher\Assets\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\vendor\Robust.LoaderApi\Robust.LoaderApi.csproj" />
+        <ProjectReference Include="..\..\vendor\SpaceWay.Vendor.ZStd\SpaceWay.Vendor.ZStd.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" />
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+        <PackageReference Include="NSec.Cryptography" />
+        <PackageReference Include="Robust.Natives" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="SpaceWay.Core.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\SpaceWay.Core\Engine\robust_signing_key.pub">
+            <LogicalName>SpaceWay.Loader.robust_signing_key.pub</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+</Project>

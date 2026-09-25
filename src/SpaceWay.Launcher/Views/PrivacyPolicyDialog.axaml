@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="440"
+             x:Class="SpaceWay.Launcher.Views.PrivacyPolicyDialog"
+             x:DataType="vm:PrivacyPolicyViewModel">
+
+    <StackPanel Spacing="14" Width="420">
+
+        <TextBlock Text="{Binding Explanation}" TextWrapping="Wrap" />
+
+        <Button Classes="link"
+                HorizontalAlignment="Left"
+                Command="{Binding OpenLinkCommand}"
+                Content="{loc:Translate privacy-open}" />
+
+        <TextBlock Classes="muted"
+                   Text="{Binding Link}"
+                   TextWrapping="Wrap"
+                   FontSize="12" />
+
+        <TextBlock Classes="muted"
+                   Text="{loc:Translate privacy-decline-hint}"
+                   TextWrapping="Wrap"
+                   FontSize="12" />
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="10"
+                    HorizontalAlignment="Right">
+            <Button Command="{Binding DeclineCommand}"
+                    Content="{loc:Translate privacy-decline}" />
+
+            <Button Classes="accent"
+                    Command="{Binding AcceptCommand}"
+                    Content="{loc:Translate privacy-accept}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

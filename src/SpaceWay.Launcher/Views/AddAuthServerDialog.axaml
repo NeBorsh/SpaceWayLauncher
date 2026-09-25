@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="440"
+             x:Class="SpaceWay.Launcher.Views.AddAuthServerDialog"
+             x:DataType="vm:AddAuthServerDialogViewModel">
+
+    <StackPanel Spacing="14" Width="420">
+
+        <TextBlock Classes="muted"
+                   TextWrapping="Wrap"
+                   Text="{loc:Translate auth-server-add-hint}" />
+
+        <TextBox Text="{Binding DisplayName}"
+                 Watermark="{loc:Translate auth-server-name}" />
+
+        <StackPanel Spacing="6">
+            <TextBox Text="{Binding Address}"
+                     Watermark="{loc:Translate auth-server-address}" />
+
+            <TextBlock Classes="muted"
+                       IsVisible="{Binding !HasAddressProblem}"
+                       TextWrapping="Wrap"
+                       Text="{loc:Translate auth-server-address-hint}" />
+
+            <TextBlock IsVisible="{Binding HasAddressProblem}"
+                       Text="{Binding AddressProblemText}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource BrushWarning}" />
+        </StackPanel>
+
+        <TextBlock IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorText}"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{StaticResource BrushWarning}" />
+
+        <Button Classes="accent"
+                HorizontalAlignment="Right"
+                IsEnabled="{Binding CanSubmit}"
+                Command="{Binding SubmitCommand}"
+                Content="{loc:Translate auth-server-add-submit}" />
+    </StackPanel>
+</UserControl>

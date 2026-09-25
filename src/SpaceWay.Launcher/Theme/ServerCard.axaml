@@ -1,0 +1,146 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+                    xmlns:loc="using:SpaceWay.Launcher.Markup"
+                    xmlns:controls="using:SpaceWay.Launcher.Controls">
+
+    <DataTemplate x:Key="ServerCardTemplate" DataType="vm:ServerItemViewModel">
+        <controls:AngleCard Classes="card" Command="{Binding ToggleExpandedCommand}">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+
+                <Grid Grid.Row="0" Grid.Column="0"
+                      ColumnDefinitions="Auto,*"
+                      Margin="0,0,12,0">
+                    <Button Grid.Column="0"
+                            Classes="star"
+                            Classes.active="{Binding IsFavorite}"
+                            Command="{Binding ToggleFavoriteCommand}"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="1"
+                               Classes="h2"
+                               Text="{Binding Name}"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center" />
+                </Grid>
+
+                <Button Grid.Row="0" Grid.Column="1"
+                        Classes="accent"
+                        IsVisible="{Binding CanConnect}"
+                        Command="{Binding ConnectCommand}"
+                        Content="{loc:Translate connect-play}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                           Classes="muted"
+                           Text="{Binding Address}"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="0,3,0,0" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                           Classes="muted"
+                           IsVisible="{Binding HasNote}"
+                           Text="{Binding Note}"
+                           TextWrapping="Wrap"
+                           Margin="0,6,0,0" />
+
+                <StackPanel Grid.Row="3" Grid.Column="0"
+                            Orientation="Horizontal"
+                            Spacing="10"
+                            Margin="0,9,12,0">
+
+                    <ItemsControl ItemsSource="{Binding Tags}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border Classes="tag" Margin="0,0,5,0">
+                                    <TextBlock Text="{Binding}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Classes="muted"
+                               IsVisible="{Binding HasSource}"
+                               Text="{Binding SourceText}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="1"
+                            Orientation="Horizontal"
+                            Spacing="8"
+                            Margin="0,9,0,0"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right">
+                    <TextBlock Classes="muted"
+                               Text="{Binding RoundText}"
+                               VerticalAlignment="Center" />
+                    <TextBlock Classes="numeric"
+                               Classes.full="{Binding IsFull}"
+                               Classes.offline="{Binding IsOffline}"
+                               Text="{Binding SlotsText}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                            IsVisible="{Binding IsExpanded}"
+                            Spacing="8"
+                            Margin="0,12,0,0">
+
+                    <Border Classes="stripe card" />
+
+                    <TextBlock Classes="muted"
+                               IsVisible="{Binding IsLoadingDetails}"
+                               Text="{loc:Translate server-details-loading}" />
+
+                    <TextBlock Classes="muted expired"
+                               IsVisible="{Binding HasDetailsError}"
+                               Text="{Binding DetailsErrorText}"
+                               TextWrapping="Wrap" />
+
+                    <TextBlock Classes="muted"
+                               IsVisible="{Binding IsDetailsEmpty}"
+                               Text="{loc:Translate server-details-empty}" />
+
+                    <SelectableTextBlock IsVisible="{Binding HasDescription}"
+                                         Text="{Binding Description}"
+                                         TextWrapping="Wrap" />
+
+                    <ItemsControl ItemsSource="{Binding Links}"
+                                  IsVisible="{Binding HasLinks}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:ServerLinkViewModel">
+                                <Button Classes="subtle"
+                                        Margin="0,0,6,6"
+                                        Command="{Binding OpenCommand}"
+                                        ToolTip.Tip="{Binding Url}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <Path Data="{Binding Icon}"
+                                              IsVisible="{Binding HasIcon}"
+                                              Fill="{StaticResource BrushTextPrimary}"
+                                              Stretch="Uniform"
+                                              Width="13" Height="13"
+                                              VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding Name}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+        </controls:AngleCard>
+    </DataTemplate>
+</ResourceDictionary>

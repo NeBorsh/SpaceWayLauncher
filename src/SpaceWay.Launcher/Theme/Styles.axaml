@@ -1,0 +1,386 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:SpaceWay.Launcher.Controls">
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://SpaceWay.Launcher/Theme/Palette.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <Style Selector="TextBlock.h1">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.h2">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.muted">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}" />
+    </Style>
+
+    <Style Selector="TextBlock.muted.expired">
+        <Setter Property="Foreground" Value="{StaticResource BrushWarning}" />
+    </Style>
+
+    <Style Selector="Border.stripe">
+        <Setter Property="Height" Value="10" />
+        <Setter Property="Background" Value="{StaticResource BrushStripe}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushStripeEdge}" />
+        <Setter Property="BorderThickness" Value="0,1" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+
+    <Style Selector="Border.stripe.card">
+        <Setter Property="Margin" Value="-13,0,-13,4" />
+    </Style>
+
+    <Style Selector="TextBlock.numeric">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.h2.selected">
+        <Setter Property="Foreground" Value="{StaticResource BrushAccentHover}" />
+    </Style>
+
+    <Style Selector="controls|AngleCard.selected">
+        <Setter Property="BorderBrush" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="TextBlock.numeric.full">
+        <Setter Property="Foreground" Value="{StaticResource BrushGold}" />
+    </Style>
+
+    <Style Selector="controls|AngleCard">
+        <Setter Property="Background" Value="{StaticResource BrushSurface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Fill="{TemplateBinding Background}"
+                                       Stroke="{TemplateBinding BorderBrush}"
+                                       StrokeThickness="1"
+                                       CornerSize="{TemplateBinding CornerSize}" />
+                    <ContentPresenter Name="ContentHost"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|AngleCard.warning">
+        <Setter Property="BorderBrush" Value="{StaticResource BrushWarning}" />
+        <Setter Property="Padding" Value="10,7" />
+    </Style>
+
+    <Style Selector="controls|AngleCard.card">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.12" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|AngleCard.card:pointerover">
+        <Setter Property="Background" Value="{StaticResource BrushSurfaceHover}" />
+    </Style>
+
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{StaticResource BrushControl}" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="16,7" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Fill="{TemplateBinding Background}" CornerSize="6" />
+                    <ContentPresenter Name="ContentHost"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button:pointerover">
+        <Setter Property="Background" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="Button:disabled">
+        <Setter Property="Opacity" Value="0.45" />
+        <Setter Property="Cursor" Value="Arrow" />
+    </Style>
+
+    <Style Selector="Button.accent">
+        <Setter Property="Background" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="Button.accent:pointerover">
+        <Setter Property="Background" Value="{StaticResource BrushAccentHover}" />
+    </Style>
+
+    <Style Selector="Button.subtle">
+        <Setter Property="Background" Value="{StaticResource BrushControl}" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="12,5" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Name="Shape"
+                                       Fill="{TemplateBinding Background}"
+                                       CornerSize="5" />
+                    <ContentPresenter Name="ContentHost"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.subtle:pointerover">
+        <Setter Property="Background" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="Button.danger:pointerover">
+        <Setter Property="Background" Value="{StaticResource BrushDanger}" />
+    </Style>
+
+    <Style Selector="Button.icon">
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Padding" Value="0,4" />
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <Style Selector="Button.link">
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter Content="{TemplateBinding Content}"
+                                  Padding="{TemplateBinding Padding}"
+                                  TextBlock.Foreground="{TemplateBinding Foreground}"
+                                  VerticalContentAlignment="Center" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.link:pointerover">
+        <Setter Property="Foreground" Value="{StaticResource BrushGold}" />
+    </Style>
+
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Panel Width="18" Height="18" VerticalAlignment="Center">
+                        <controls:AngleBox Name="Box"
+                                           Fill="{StaticResource BrushBackground}"
+                                           Stroke="{StaticResource BrushBorder}"
+                                           StrokeThickness="1"
+                                           CornerSize="4" />
+                        <Path Name="CheckGlyph"
+                              Data="M 10,0 L 4,6.4 L 1.4,3.7 L 0,5.2 L 4,9.4 L 11.4,1.5 Z"
+                              Stretch="Uniform"
+                              Margin="4"
+                              Fill="{StaticResource BrushTextPrimary}"
+                              IsVisible="False" />
+                    </Panel>
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"
+                                      VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="CheckBox:pointerover /template/ controls|AngleBox#Box">
+        <Setter Property="Stroke" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="CheckBox:checked /template/ controls|AngleBox#Box">
+        <Setter Property="Fill" Value="{StaticResource BrushAccent}" />
+        <Setter Property="Stroke" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="CheckBox:checked /template/ Path#CheckGlyph">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="Button.star">
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Path Name="Glyph"
+                      Data="M 10,1 L 12.5,7 L 19,7.5 L 14,11.8 L 15.5,18 L 10,14.7 L 4.5,18 L 6,11.8 L 1,7.5 L 7.5,7 Z"
+                      Stretch="Uniform"
+                      Margin="1"
+                      Fill="Transparent"
+                      Stroke="{StaticResource BrushTextMuted}"
+                      StrokeThickness="1.5"
+                      StrokeJoin="Round" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.star:pointerover /template/ Path#Glyph">
+        <Setter Property="Stroke" Value="{StaticResource BrushGold}" />
+    </Style>
+
+    <Style Selector="Button.star.active /template/ Path#Glyph">
+        <Setter Property="Fill" Value="{StaticResource BrushGold}" />
+        <Setter Property="Stroke" Value="{StaticResource BrushGold}" />
+    </Style>
+
+    <Style Selector="Button.overlay-close">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Arrow" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="Transparent" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.choice">
+        <Setter Property="Background" Value="{StaticResource BrushSurface}" />
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <controls:AngleBox Fill="{TemplateBinding Background}"
+                                       Stroke="{StaticResource BrushBorder}"
+                                       StrokeThickness="1"
+                                       CornerSize="8" />
+                    <ContentPresenter Name="ContentHost"
+                                      Background="Transparent"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="Left" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.choice:pointerover">
+        <Setter Property="Background" Value="{StaticResource BrushSurfaceHover}" />
+    </Style>
+
+    <Style Selector="Border.tag">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="6,2" />
+    </Style>
+
+    <Style Selector="Border.tag > TextBlock">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}" />
+    </Style>
+
+    <Style Selector="TextBox">
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+    </Style>
+
+    <Style Selector="ComboBox">
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="ComboBox:pointerover /template/ Border#Background">
+        <Setter Property="Background" Value="{StaticResource BrushSurfaceHover}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="ComboBox /template/ Border#PopupBorder">
+        <Setter Property="Background" Value="{StaticResource BrushSurface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="0" />
+    </Style>
+
+    <Style Selector="ComboBoxItem">
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="10,7" />
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource BrushControlHover}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource BrushAccentHover}" />
+    </Style>
+
+    <Style Selector="ListBox.nav">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="ListBox.nav ListBoxItem">
+        <Setter Property="Padding" Value="12,9" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Margin" Value="0,1" />
+        <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <Style Selector="ListBox.nav ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{StaticResource BrushAccent}" />
+    </Style>
+
+    <Style Selector="ProgressBar">
+        <Setter Property="Foreground" Value="{StaticResource BrushControl}" />
+        <Setter Property="Background" Value="{StaticResource BrushSurfaceHover}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="MinHeight" Value="6" />
+    </Style>
+
+</Styles>

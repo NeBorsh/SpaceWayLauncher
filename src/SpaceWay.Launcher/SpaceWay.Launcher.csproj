@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Diagnostics" Condition="'$(Configuration)' == 'Debug'" />
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.Sinks.Console" />
+        <PackageReference Include="Serilog.Sinks.File" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SpaceWay.Core\SpaceWay.Core.csproj" />
+
+        <ProjectReference Include="..\SpaceWay.Loader\SpaceWay.Loader.csproj" />
+    </ItemGroup>
+</Project>

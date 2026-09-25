@@ -1,0 +1,155 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             xmlns:controls="using:SpaceWay.Launcher.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SpaceWay.Launcher.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <TextBlock Grid.Row="0"
+                   Classes="h1"
+                   Text="{loc:Translate nav-settings}"
+                   Margin="0,0,0,12" />
+
+        <ScrollViewer Grid.Row="1" Padding="0,0,6,0">
+            <StackPanel Spacing="10" MaxWidth="820" HorizontalAlignment="Stretch">
+
+                <controls:AngleCard Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="h2" Text="{loc:Translate settings-look}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Translate settings-language}" />
+                                <TextBlock Classes="muted"
+                                           TextWrapping="Wrap"
+                                           Text="{loc:Translate settings-language-hint}" />
+                            </StackPanel>
+
+                            <ComboBox Grid.Column="1"
+                                      MinWidth="150"
+                                      VerticalAlignment="Center"
+                                      ItemsSource="{Binding Languages}"
+                                      SelectedItem="{Binding SelectedLanguage}"
+                                      DisplayMemberBinding="{Binding NativeName}" />
+                        </Grid>
+                    </StackPanel>
+                </controls:AngleCard>
+
+                <controls:AngleCard Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="h2" Text="{loc:Translate settings-game}" />
+
+                        <StackPanel Spacing="4">
+                            <CheckBox IsChecked="{Binding CompatEnabled}"
+                                      Content="{loc:Translate settings-compat}" />
+
+                            <TextBlock Classes="muted"
+                                       TextWrapping="Wrap"
+                                       Margin="26,0,0,0"
+                                       Text="{loc:Translate settings-compat-hint}" />
+                        </StackPanel>
+                    </StackPanel>
+                </controls:AngleCard>
+
+                <controls:AngleCard Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="h2" Text="{loc:Translate settings-data}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Translate settings-user-data}" />
+                                <TextBlock Classes="muted"
+                                           TextWrapping="Wrap"
+                                           Text="{Binding UserDataPath}" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Classes="subtle"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding OpenUserDataCommand}"
+                                    Content="{loc:Translate settings-open-folder}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{loc:Translate settings-downloads}" />
+                                    <TextBlock Classes="muted" Text="{Binding StorageText}" />
+                                </StackPanel>
+
+                                <TextBlock Classes="muted"
+                                           TextWrapping="Wrap"
+                                           Text="{Binding LocalDataPath}" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Classes="subtle"
+                                    VerticalAlignment="Center"
+                                    Command="{Binding OpenLocalDataCommand}"
+                                    Content="{loc:Translate settings-open-folder}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{loc:Translate settings-content}" />
+                                    <TextBlock Classes="muted" Text="{Binding ContentSizeText}" />
+                                </StackPanel>
+
+                                <TextBlock Classes="muted"
+                                           TextWrapping="Wrap"
+                                           Text="{loc:Translate settings-content-hint}" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Classes="subtle danger"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{Binding !IsBusy}"
+                                    Command="{Binding ClearContentCommand}"
+                                    Content="{loc:Translate settings-clear}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{loc:Translate settings-engines}" />
+                                    <TextBlock Classes="muted" Text="{Binding EngineSizeText}" />
+                                </StackPanel>
+
+                                <TextBlock Classes="muted"
+                                           TextWrapping="Wrap"
+                                           Text="{loc:Translate settings-engines-hint}" />
+                            </StackPanel>
+
+                            <Button Grid.Column="1"
+                                    Classes="subtle danger"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{Binding !IsBusy}"
+                                    Command="{Binding ClearEnginesCommand}"
+                                    Content="{loc:Translate settings-clear}" />
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Classes="muted"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding IsBusy}"
+                                       Text="{loc:Translate settings-clearing}" />
+
+                            <TextBlock IsVisible="{Binding HasError}"
+                                       Text="{Binding ErrorText}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{StaticResource BrushWarning}" />
+                        </StackPanel>
+                    </StackPanel>
+                </controls:AngleCard>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

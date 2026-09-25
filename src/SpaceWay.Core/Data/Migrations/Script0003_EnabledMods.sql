@@ -1,0 +1,5 @@
+CREATE TABLE EnabledMod(
+    FileName  TEXT NOT NULL PRIMARY KEY,
+
+    SortOrder INTEGER NOT NULL
+);

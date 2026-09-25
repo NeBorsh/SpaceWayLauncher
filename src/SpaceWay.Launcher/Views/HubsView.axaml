@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             xmlns:controls="using:SpaceWay.Launcher.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SpaceWay.Launcher.Views.HubsView"
+             x:DataType="vm:HubsViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,12">
+            <TextBlock Classes="h1" Text="{loc:Translate nav-hubs}" />
+            <TextBlock Classes="muted"
+                       TextWrapping="Wrap"
+                       Text="{loc:Translate hubs-hint}" />
+            <TextBlock Classes="muted"
+                       TextWrapping="Wrap"
+                       Text="{loc:Translate hubs-drag-hint}" />
+        </StackPanel>
+
+        <controls:AngleCard Grid.Row="1"
+                IsVisible="{Binding AllDisabled}"
+                Classes="warning" Margin="0,0,0,10">
+            <TextBlock Text="{loc:Translate hubs-all-disabled}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource BrushWarning}" />
+        </controls:AngleCard>
+
+        <Button Grid.Row="2"
+                Classes="accent"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,14"
+                Command="{Binding AddHubCommand}"
+                Content="{loc:Translate hubs-add}" />
+
+        <Panel Grid.Row="3">
+            <TextBlock Classes="muted"
+                       IsVisible="{Binding IsEmpty}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{loc:Translate hubs-empty}" />
+
+            <ListBox ItemsSource="{Binding Items}"
+                     DragDrop.AllowDrop="True"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Padding="0,0,6,0">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0,0,0,8" />
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+
+                    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+
+                    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                </ListBox.Styles>
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="vm:HubItemViewModel">
+                        <controls:AngleCard Classes="card"
+                                            Classes.drop-target="{Binding IsDropTarget}">
+                            <Grid ColumnDefinitions="Auto,Auto,*,Auto"
+                                  RowDefinitions="Auto,Auto">
+
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Grid.RowSpan="2"
+                                           Classes="grip"
+                                           Text="⣿"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,10,0" />
+
+                                <CheckBox Grid.Row="0" Grid.Column="1"
+                                          Grid.RowSpan="2"
+                                          IsChecked="{Binding IsEnabled}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,10,0" />
+
+                                <TextBlock Grid.Row="0" Grid.Column="2"
+                                           Classes="h2"
+                                           Text="{Binding DisplayName}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+
+                                <Button Grid.Row="0" Grid.Column="3"
+                                        Classes="subtle danger"
+                                        Command="{Binding RemoveCommand}"
+                                        VerticalAlignment="Center"
+                                        Content="{loc:Translate hubs-remove}" />
+
+                                <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal"
+                                            Spacing="10"
+                                            Margin="0,4,0,0">
+                                    <TextBlock Classes="muted" Text="{Binding Address}" />
+                                    <TextBlock Classes="muted" Text="{Binding PriorityText}" />
+                                </StackPanel>
+                            </Grid>
+                        </controls:AngleCard>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Panel>
+    </Grid>
+</UserControl>

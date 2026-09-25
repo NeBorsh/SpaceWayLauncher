@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <NoWarn>$(NoWarn);CS8618;CS8625;SYSLIB0051;CA2255</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SharpZstd.Interop" ExcludeAssets="native" />
+        <PackageReference Include="Robust.Natives.Zstd" />
+    </ItemGroup>
+</Project>

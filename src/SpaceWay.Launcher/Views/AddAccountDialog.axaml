@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="460"
+             x:Class="SpaceWay.Launcher.Views.AddAccountDialog"
+             x:DataType="vm:AddAccountDialogViewModel"
+             x:Name="Root">
+
+    <StackPanel Spacing="14" Width="420">
+
+        <StackPanel IsVisible="{Binding IsChoosingKind}" Spacing="8">
+            <ItemsControl ItemsSource="{Binding KnownServers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:AuthServerChoice">
+                        <Button Classes="choice"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,0,8"
+                                Command="{Binding ChooseCommand}">
+                            <StackPanel Spacing="3">
+                                <TextBlock Classes="h2" Text="{Binding DisplayName}" />
+                                <TextBlock Classes="muted" Text="{Binding Address}" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button Classes="choice"
+                    HorizontalAlignment="Stretch"
+                    Command="{Binding ChooseOfflineCommand}">
+                <StackPanel Spacing="3">
+                    <TextBlock Classes="h2" Text="{loc:Translate add-account-kind-offline}" />
+                    <TextBlock Classes="muted" Text="{loc:Translate add-account-kind-offline-hint}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <StackPanel IsVisible="{Binding IsLogin}" Spacing="10">
+            <TextBox Text="{Binding Username}"
+                     Watermark="{loc:Translate accounts-username}" />
+
+            <TextBox Text="{Binding Password}"
+                     PasswordChar="•"
+                     Watermark="{loc:Translate accounts-password}" />
+
+            <TextBox IsVisible="{Binding NeedsTwoFactor}"
+                     Text="{Binding TwoFactorCode}"
+                     Watermark="{loc:Translate accounts-tfa-code}" />
+        </StackPanel>
+
+        <StackPanel IsVisible="{Binding IsOffline}" Spacing="10">
+            <TextBox Text="{Binding Username}"
+                     Watermark="{loc:Translate accounts-username}" />
+
+            <TextBlock Classes="muted"
+                       IsVisible="{Binding !HasUsernameProblem}"
+                       TextWrapping="Wrap"
+                       Text="{loc:Translate username-rules}" />
+
+            <TextBlock IsVisible="{Binding HasUsernameProblem}"
+                       Text="{Binding UsernameProblemText}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource BrushWarning}" />
+
+            <TextBlock Classes="muted"
+                       TextWrapping="Wrap"
+                       Text="{loc:Translate add-account-offline-warning}" />
+        </StackPanel>
+
+        <TextBlock IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorText}"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{StaticResource BrushWarning}" />
+
+        <Grid ColumnDefinitions="Auto,*,Auto" IsVisible="{Binding !IsChoosingKind}">
+            <Button Grid.Column="0"
+                    Classes="link"
+                    Command="{Binding BackCommand}"
+                    Content="{loc:Translate add-account-back}" />
+
+            <Button Grid.Column="2"
+                    Classes="accent"
+                    IsVisible="{Binding IsLogin}"
+                    IsEnabled="{Binding CanSubmitLogin}"
+                    Command="{Binding SubmitLoginCommand}"
+                    Content="{loc:Translate accounts-login}" />
+
+            <Button Grid.Column="2"
+                    Classes="accent"
+                    IsVisible="{Binding IsOffline}"
+                    IsEnabled="{Binding CanSubmitOffline}"
+                    Command="{Binding SubmitOfflineCommand}"
+                    Content="{loc:Translate add-account-continue}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

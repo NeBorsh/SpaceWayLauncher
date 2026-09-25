@@ -1,0 +1,33 @@
+SpaceWay Launcher
+
+This product includes code from SS14.Launcher
+(https://github.com/space-wizards/SS14.Launcher),
+Copyright (c) 2019 Space Station 14 Contributors,
+licensed under the MIT License. The license text is in
+vendor/SS14.Launcher-LICENSE.txt.
+
+Code taken from SS14.Launcher:
+  vendor/Robust.LoaderApi/        unmodified
+  vendor/SpaceWay.Vendor.ZStd/    namespace changed and one exception handler
+                                  added; both changes are marked in the file
+  src/SpaceWay.Launcher/Controls/AngleBox.cs   shape based on the original control
+  src/SpaceWay.Launcher/Theme/Palette.axaml    color palette
+
+The Ed25519 public key used to verify engine builds
+(src/SpaceWay.Core/Engine/robust_signing_key.pub) belongs to
+Space Wizards Federation and is taken from the same project.
+
+The engine, content and loader code (src/SpaceWay.Core/Engine/,
+src/SpaceWay.Core/Content/, src/SpaceWay.Loader/) is an independent
+implementation. It follows the same file formats and download protocol,
+which are defined by the engine.
+
+Sidebar icons (src/SpaceWay.Launcher/Theme/NavIcons.cs) are
+Material Symbols by Google, licensed under the Apache License 2.0.
+
+Server link icons (src/SpaceWay.Launcher/Theme/LinkIcons.cs):
+  Discord, GitHub, Telegram: Font Awesome Free 7.3.1 (Fonticons, Inc.),
+    licensed under CC BY 4.0, https://fontawesome.com/license/free
+  Forum, website, wiki: Material Symbols by Google,
+    licensed under the Apache License 2.0.
+Icon geometry was converted from SVG without changes to the shapes.

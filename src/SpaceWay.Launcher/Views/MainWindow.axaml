@@ -1,0 +1,166 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+        xmlns:views="using:SpaceWay.Launcher.Views"
+        xmlns:loc="using:SpaceWay.Launcher.Markup"
+        xmlns:controls="using:SpaceWay.Launcher.Controls"
+        mc:Ignorable="d" d:DesignWidth="1060" d:DesignHeight="660"
+        x:Class="SpaceWay.Launcher.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="{loc:Translate app-name}"
+        Width="1060" Height="660"
+        MinWidth="860" MinHeight="520"
+        Background="{StaticResource BrushBackground}"
+        DragDrop.AllowDrop="True">
+
+    <Window.DataTemplates>
+        <DataTemplate DataType="vm:ServersViewModel">
+            <views:ServersView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:FavoritesViewModel">
+            <views:FavoritesView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:AccountsViewModel">
+            <views:AccountsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:HubsViewModel">
+            <views:HubsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:SettingsViewModel">
+            <views:SettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ModsViewModel">
+            <views:ModsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:AddHubDialogViewModel">
+            <views:AddHubDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:AddServerDialogViewModel">
+            <views:AddServerDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:AddAccountDialogViewModel">
+            <views:AddAccountDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:AddAuthServerDialogViewModel">
+            <views:AddAuthServerDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ConfirmDialogViewModel">
+            <views:ConfirmDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ConnectionViewModel">
+            <views:ConnectionDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:PrivacyPolicyViewModel">
+            <views:PrivacyPolicyDialog />
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:SignInPromptViewModel">
+            <views:SignInPromptDialog />
+        </DataTemplate>
+
+    </Window.DataTemplates>
+
+    <Panel>
+        <Grid ColumnDefinitions="188,*">
+
+        <Border Grid.Column="0"
+                Background="{StaticResource BrushSurface}"
+                BorderBrush="{StaticResource BrushBorder}"
+                BorderThickness="0,0,1,0">
+            <Grid RowDefinitions="Auto,*,Auto" Margin="10,14">
+
+                <TextBlock Grid.Row="0"
+                           Classes="h2"
+                           Text="{loc:Translate app-name}"
+                           Margin="12,0,0,14" />
+
+                <ListBox Grid.Row="1"
+                         Classes="nav"
+                         ItemsSource="{Binding Sections}"
+                         SelectedItem="{Binding SelectedSection}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="vm:NavigationSection">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Path Data="{Binding Icon}"
+                                      Fill="{StaticResource BrushTextPrimary}"
+                                      Stretch="Uniform"
+                                      Width="15" Height="15"
+                                      VerticalAlignment="Center" />
+
+                                <TextBlock Text="{Binding Title}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button Grid.Row="2"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Click="OpenBundleClicked"
+                        Content="{loc:Translate bundle-open}" />
+
+            </Grid>
+        </Border>
+
+        <ContentControl Grid.Column="1"
+                        Content="{Binding SelectedSection.Content}"
+                        Margin="20,18" />
+        </Grid>
+
+        <Panel Name="BundleDropOverlay"
+               IsVisible="False"
+               IsHitTestVisible="False"
+               Margin="8">
+            <controls:AngleBox Fill="{StaticResource BrushBackground}"
+                               Opacity="0.92"
+                               Stroke="{StaticResource BrushAccent}"
+                               StrokeThickness="2"
+                               CornerSize="14" />
+            <TextBlock Classes="h1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{loc:Translate bundle-drop-hint}" />
+        </Panel>
+
+        <Panel IsVisible="{Binding Dialogs.IsOpen}"
+               Background="#B2000000">
+            <Button Classes="overlay-close"
+                    IsVisible="{Binding Dialogs.CanDismiss}"
+                    Command="{Binding Dialogs.CloseCurrentCommand}" />
+
+            <controls:AngleCard HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Padding="0,20"
+                                CornerSize="12"
+                                MaxHeight="560">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Spacing="14" Margin="0,0,0,14">
+                        <TextBlock Classes="h1"
+                                   Text="{Binding Dialogs.Current.Title, FallbackValue=''}"
+                                   Margin="22,0" />
+                        <Border Classes="stripe" Margin="1,0" />
+                    </StackPanel>
+
+                    <ScrollViewer>
+                        <ContentControl Content="{Binding Dialogs.Current}" Margin="22,0" />
+                    </ScrollViewer>
+                </DockPanel>
+            </controls:AngleCard>
+        </Panel>
+    </Panel>
+</Window>

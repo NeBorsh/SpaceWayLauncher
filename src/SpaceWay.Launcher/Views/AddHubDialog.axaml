@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="420"
+             x:Class="SpaceWay.Launcher.Views.AddHubDialog"
+             x:DataType="vm:AddHubDialogViewModel">
+
+    <StackPanel Spacing="14" Width="400">
+
+        <TextBox Text="{Binding DisplayName}"
+                 Watermark="{loc:Translate hubs-name}" />
+
+        <TextBox Text="{Binding Address}"
+                 Watermark="{loc:Translate hubs-address}" />
+
+        <TextBlock IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorText}"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{StaticResource BrushWarning}" />
+
+        <Button Classes="accent"
+                HorizontalAlignment="Right"
+                IsEnabled="{Binding CanSubmit}"
+                Command="{Binding SubmitCommand}"
+                Content="{loc:Translate add-account-continue}" />
+    </StackPanel>
+</UserControl>

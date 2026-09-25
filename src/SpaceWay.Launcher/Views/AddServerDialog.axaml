@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="420"
+             x:Class="SpaceWay.Launcher.Views.AddServerDialog"
+             x:DataType="vm:AddServerDialogViewModel">
+
+    <StackPanel Spacing="14" Width="400">
+
+        <TextBox Text="{Binding Address}"
+                 Watermark="{loc:Translate favorites-add-address}" />
+
+        <TextBlock Classes="muted"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Text="{loc:Translate favorites-add-address-hint}" />
+
+        <TextBox Text="{Binding DisplayName}"
+                 Watermark="{loc:Translate favorites-add-name}" />
+
+        <TextBlock IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorText}"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{StaticResource BrushWarning}" />
+
+        <Button Classes="accent"
+                HorizontalAlignment="Right"
+                IsEnabled="{Binding CanSubmit}"
+                Command="{Binding SubmitCommand}"
+                Content="{loc:Translate favorites-add-submit}" />
+    </StackPanel>
+</UserControl>

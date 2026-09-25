@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             xmlns:controls="using:SpaceWay.Launcher.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SpaceWay.Launcher.Views.ServersView"
+             x:DataType="vm:ServersViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+            <StackPanel Grid.Column="0" Spacing="2">
+                <TextBlock Classes="h1" Text="{loc:Translate nav-servers}" />
+                <TextBlock Classes="muted" Text="{Binding CountText}" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Command="{Binding RefreshCommand}"
+                    IsEnabled="{Binding !IsLoading}"
+                    Content="{loc:Translate servers-refresh}" />
+        </Grid>
+
+        <controls:AngleCard Grid.Row="1" Margin="0,0,0,10">
+            <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding Search}"
+                             Watermark="{loc:Translate filter-search-placeholder}" />
+
+                    <ComboBox Grid.Column="1"
+                              Margin="8,0,0,0"
+                              MinWidth="150"
+                              ItemsSource="{Binding SortOptions}"
+                              SelectedItem="{Binding SelectedSort}"
+                              DisplayMemberBinding="{Binding Title}" />
+
+                    <ComboBox Grid.Column="2"
+                              Margin="8,0,0,0"
+                              MinWidth="110"
+                              ItemsSource="{Binding LanguageOptions}"
+                              SelectedItem="{Binding SelectedLanguageFilter}"
+                              DisplayMemberBinding="{Binding Title}" />
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <CheckBox IsChecked="{Binding HideFull}"
+                              Content="{loc:Translate filter-hide-full}" />
+                    <CheckBox IsChecked="{Binding HideEmpty}"
+                              Content="{loc:Translate filter-hide-empty}" />
+                    <CheckBox IsChecked="{Binding HideAdultOnly}"
+                              Content="{loc:Translate filter-hide-adult}" />
+
+                    <Button Classes="subtle"
+                            Command="{Binding ResetFiltersCommand}"
+                            Content="{loc:Translate filter-reset}" />
+                </StackPanel>
+            </StackPanel>
+        </controls:AngleCard>
+
+        <controls:AngleCard Grid.Row="2"
+                IsVisible="{Binding HasFailures}"
+                Classes="warning" Margin="0,0,0,10">
+            <TextBlock Text="{Binding FailuresText}"
+                       FontSize="12"
+                       Foreground="{StaticResource BrushWarning}" />
+        </controls:AngleCard>
+
+        <Panel Grid.Row="3">
+            <TextBlock Classes="muted"
+                       IsVisible="{Binding IsLoading}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Text="{loc:Translate servers-loading}" />
+
+            <TextBlock Classes="muted"
+                       IsVisible="{Binding IsEmpty}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Text="{loc:Translate servers-empty}" />
+
+            <StackPanel IsVisible="{Binding IsEmptyByFilter}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="10">
+                <TextBlock Classes="h2"
+                           HorizontalAlignment="Center"
+                           Text="{Binding EmptyByFilterText}" />
+                <Button Classes="accent"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ResetFiltersCommand}"
+                        Content="{loc:Translate filter-reset}" />
+            </StackPanel>
+
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl Classes="cards"
+                              ItemsSource="{Binding Servers}"
+                              ItemTemplate="{StaticResource ServerCardTemplate}"
+                              Margin="0,0,6,0">
+                    <ItemsControl.Styles>
+                        <Style Selector="ItemsControl.cards > ContentPresenter"
+                               x:DataType="vm:ServerItemViewModel">
+                            <Setter Property="Margin" Value="0,0,0,8" />
+                            <Setter Property="IsVisible" Value="{Binding IsShown}" />
+                        </Style>
+                    </ItemsControl.Styles>
+                </ItemsControl>
+            </ScrollViewer>
+        </Panel>
+    </Grid>
+</UserControl>

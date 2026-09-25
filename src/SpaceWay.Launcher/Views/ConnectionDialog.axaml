@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="420"
+             x:Class="SpaceWay.Launcher.Views.ConnectionDialog"
+             x:DataType="vm:ConnectionViewModel">
+
+    <StackPanel Spacing="14" Width="400">
+
+        <TextBlock Classes="h2"
+                   Text="{Binding ServerName}"
+                   TextTrimming="CharacterEllipsis" />
+
+        <StackPanel Spacing="6" IsVisible="{Binding !HasError}">
+            <TextBlock Text="{Binding StageText}" />
+
+            <ProgressBar Value="{Binding ProgressValue}"
+                         IsIndeterminate="{Binding IsIndeterminate}"
+                         Minimum="0" Maximum="100"
+                         Height="6" />
+
+            <TextBlock Classes="muted"
+                       IsVisible="{Binding DetailText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Text="{Binding DetailText}" />
+        </StackPanel>
+
+        <TextBlock Classes="muted"
+                   IsVisible="{Binding HasMods}"
+                   Text="{Binding ModsText}" />
+
+        <TextBlock IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorText}"
+                   TextWrapping="Wrap"
+                   Foreground="{StaticResource BrushWarning}" />
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="10"
+                    HorizontalAlignment="Right">
+
+            <Button IsVisible="{Binding !IsFinished}"
+                    Command="{Binding CancelConnectionCommand}"
+                    Content="{loc:Translate connect-cancel}" />
+
+            <Button IsVisible="{Binding CanRetryWithoutMods}"
+                    Command="{Binding RetryWithoutModsCommand}"
+                    Content="{loc:Translate connect-without-mods}" />
+
+            <Button IsVisible="{Binding IsFinished}"
+                    Classes.accent="{Binding !CanSignIn}"
+                    Command="{Binding DismissCommand}"
+                    Content="{loc:Translate connect-close}" />
+
+            <Button Classes="accent"
+                    IsVisible="{Binding CanSignIn}"
+                    Command="{Binding SignInCommand}"
+                    Content="{loc:Translate connect-sign-in}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

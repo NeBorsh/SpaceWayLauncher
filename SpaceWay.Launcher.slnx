@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SpaceWay.Core/SpaceWay.Core.csproj" />
+    <Project Path="src/SpaceWay.Launcher/SpaceWay.Launcher.csproj" />
+    <Project Path="src/SpaceWay.Loader/SpaceWay.Loader.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SpaceWay.Core.Tests/SpaceWay.Core.Tests.csproj" />
+  </Folder>
+  <Folder Name="/vendor/">
+    <Project Path="vendor/Robust.LoaderApi/Robust.LoaderApi.csproj" />
+    <Project Path="vendor/SpaceWay.Vendor.ZStd/SpaceWay.Vendor.ZStd.csproj" />
+  </Folder>
+</Solution>

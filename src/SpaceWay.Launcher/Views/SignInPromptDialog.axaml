@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             mc:Ignorable="d" d:DesignWidth="420"
+             x:Class="SpaceWay.Launcher.Views.SignInPromptDialog"
+             x:DataType="vm:SignInPromptViewModel">
+
+    <StackPanel Spacing="14" Width="400">
+
+        <TextBlock Classes="muted"
+                   TextWrapping="Wrap"
+                   Text="{loc:Translate sign-in-prompt-text}" />
+
+        <TextBlock Classes="muted"
+                   TextWrapping="Wrap"
+                   Text="{loc:Translate sign-in-prompt-offline}" />
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="8"
+                    HorizontalAlignment="Right">
+            <Button Command="{Binding LaterCommand}"
+                    Content="{loc:Translate sign-in-prompt-later}" />
+
+            <Button Classes="accent"
+                    Command="{Binding SignInCommand}"
+                    Content="{loc:Translate sign-in-prompt-sign-in}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

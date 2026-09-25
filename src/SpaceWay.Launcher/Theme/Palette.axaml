@@ -1,0 +1,53 @@
+<!-- Based on SS14.Launcher, Copyright (c) 2019 Space Station 14 Contributors. MIT License, see NOTICE. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="ColorBackground">#1E1E22</Color>
+    <Color x:Key="ColorSurface">#25252A</Color>
+    <Color x:Key="ColorSurfaceHover">#2E2E35</Color>
+    <Color x:Key="ColorBorder">#3A3A42</Color>
+
+    <Color x:Key="ColorControl">#464966</Color>
+    <Color x:Key="ColorControlHover">#575B7F</Color>
+
+    <Color x:Key="ColorAccent">#3E6C45</Color>
+    <Color x:Key="ColorAccentHover">#4C8455</Color>
+    <Color x:Key="ColorGold">#ADA24B</Color>
+
+    <Color x:Key="ColorTextPrimary">#EEEEEE</Color>
+    <Color x:Key="ColorTextMuted">#AAAAAA</Color>
+    <Color x:Key="ColorWarning">#ADA24B</Color>
+
+    <Color x:Key="ColorDanger">#8E4B4B</Color>
+    <Color x:Key="ColorDangerHover">#A85757</Color>
+
+    <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource ColorBackground}" />
+    <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource ColorSurface}" />
+    <SolidColorBrush x:Key="BrushSurfaceHover" Color="{StaticResource ColorSurfaceHover}" />
+    <SolidColorBrush x:Key="BrushBorder" Color="{StaticResource ColorBorder}" />
+    <SolidColorBrush x:Key="BrushControl" Color="{StaticResource ColorControl}" />
+    <SolidColorBrush x:Key="BrushControlHover" Color="{StaticResource ColorControlHover}" />
+    <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource ColorAccent}" />
+    <SolidColorBrush x:Key="BrushAccentHover" Color="{StaticResource ColorAccentHover}" />
+    <SolidColorBrush x:Key="BrushGold" Color="{StaticResource ColorGold}" />
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource ColorTextPrimary}" />
+    <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}" />
+    <SolidColorBrush x:Key="BrushWarning" Color="{StaticResource ColorWarning}" />
+    <SolidColorBrush x:Key="BrushDanger" Color="{StaticResource ColorDanger}" />
+    <SolidColorBrush x:Key="BrushDangerHover" Color="{StaticResource ColorDangerHover}" />
+
+    <Color x:Key="ColorStripeEdge">#525252</Color>
+    <SolidColorBrush x:Key="BrushStripeEdge" Color="{StaticResource ColorStripeEdge}" />
+
+    <VisualBrush x:Key="BrushStripe"
+                 TileMode="Tile"
+                 Stretch="Fill"
+                 SourceRect="0,0,32,32"
+                 DestinationRect="0,0,16,16">
+        <VisualBrush.Visual>
+            <Panel Width="32" Height="32" Background="#1E1E22">
+                <Path Data="M 0 8 L 24 32 L 8 32 L 0 24 Z" Fill="#2C2C30" />
+                <Path Data="M 8 0 L 24 0 L 32 8 L 32 24 Z" Fill="#2C2C30" />
+            </Panel>
+        </VisualBrush.Visual>
+    </VisualBrush>
+</ResourceDictionary>

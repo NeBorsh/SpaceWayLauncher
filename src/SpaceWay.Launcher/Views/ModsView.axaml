@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SpaceWay.Launcher.ViewModels"
+             xmlns:loc="using:SpaceWay.Launcher.Markup"
+             xmlns:controls="using:SpaceWay.Launcher.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SpaceWay.Launcher.Views.ModsView"
+             x:DataType="vm:ModsViewModel"
+             DragDrop.AllowDrop="True">
+
+    <Panel Background="Transparent">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+        <StackPanel Grid.Row="0" Spacing="2" Margin="0,0,0,12">
+            <TextBlock Classes="h1" Text="{loc:Translate nav-mods}" />
+            <TextBlock Classes="muted" Text="{Binding EnabledText}" />
+        </StackPanel>
+
+        <controls:AngleCard Grid.Row="1"
+                Classes="warning" Margin="0,0,0,10">
+            <TextBlock Text="{loc:Translate mods-warning}"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource BrushWarning}" />
+        </controls:AngleCard>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Margin="0,0,0,14">
+            <Button Classes="accent"
+                    Command="{Binding OpenFolderCommand}"
+                    Content="{loc:Translate mods-open-folder}" />
+
+            <Button Command="{Binding RefreshCommand}"
+                    Content="{loc:Translate mods-refresh}" />
+
+            <TextBlock Classes="muted"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding HasError}"
+                       Foreground="{StaticResource BrushWarning}"
+                       Text="{Binding ErrorText}" />
+        </StackPanel>
+
+        <controls:AngleCard Grid.Row="3"
+                            IsVisible="{Binding HasImportText}"
+                            Classes.warning="{Binding ImportHasProblems}"
+                            Padding="10,7"
+                            Margin="0,0,0,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Classes="muted"
+                           Classes.expired="{Binding ImportHasProblems}"
+                           Text="{Binding ImportText}"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Classes="subtle"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Top"
+                        Command="{Binding DismissImportCommand}"
+                        Content="✕" />
+            </Grid>
+        </controls:AngleCard>
+
+        <Panel Grid.Row="4">
+            <StackPanel IsVisible="{Binding IsEmpty}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="6">
+                <TextBlock Classes="h2"
+                           HorizontalAlignment="Center"
+                           Text="{loc:Translate mods-empty}" />
+                <TextBlock Classes="muted"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Text="{loc:Translate mods-empty-hint}" />
+                <TextBlock Classes="muted"
+                           HorizontalAlignment="Center"
+                           Text="{Binding FolderPath}" />
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding Items}" Padding="0,0,6,0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:ModItemViewModel">
+                        <controls:AngleCard Classes="card" Margin="0,0,0,8">
+                            <Grid ColumnDefinitions="Auto,*">
+
+                                <CheckBox Grid.Column="0"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,10,0"
+                                          IsChecked="{Binding IsEnabled}" />
+
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Classes="h2" Text="{Binding FileName}" />
+
+                                    <TextBlock Classes="muted"
+                                               Classes.expired="{Binding HasProblem}"
+                                               Text="{Binding StatusText}" />
+                                </StackPanel>
+                            </Grid>
+                        </controls:AngleCard>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Panel>
+    </Grid>
+
+        <Panel Name="DropOverlay"
+               IsVisible="False"
+               IsHitTestVisible="False">
+            <controls:AngleBox Fill="{StaticResource BrushBackground}"
+                               Opacity="0.92"
+                               Stroke="{StaticResource BrushAccent}"
+                               StrokeThickness="2"
+                               CornerSize="14" />
+            <TextBlock Classes="h1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{loc:Translate mods-drop-hint}" />
+        </Panel>
+    </Panel>
+</UserControl>

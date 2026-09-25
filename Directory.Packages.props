@@ -1,0 +1,36 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    <ItemGroup Label="UI">
+        <PackageVersion Include="Avalonia" Version="11.3.22" />
+        <PackageVersion Include="Avalonia.Desktop" Version="11.3.22" />
+        <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.22" />
+        <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.22" />
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+        <PackageVersion Include="Linguini.Bundle" Version="0.8.1" />
+    </ItemGroup>
+    <ItemGroup Label="Данные и сеть">
+        <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="10.0.12" />
+        <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
+        <PackageVersion Include="Dapper" Version="2.1.35" />
+        <PackageVersion Include="Serilog" Version="4.2.0" />
+        <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+        <PackageVersion Include="Serilog.Sinks.File" Version="6.0.0" />
+        <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="9.0.0" />
+        <PackageVersion Include="Robust.Shared.AuthLib" Version="0.1.2" />
+        <PackageVersion Include="YamlDotNet" Version="16.3.0" />
+    </ItemGroup>
+    <ItemGroup Label="Криптография и сжатие">
+        <PackageVersion Include="NSec.Cryptography" Version="25.4.0" />
+        <PackageVersion Include="libsodium" Version="1.0.20.1" />
+        <PackageVersion Include="SharpZstd.Interop" Version="1.5.2-beta2" />
+        <PackageVersion Include="Robust.Natives" Version="0.2.5" />
+        <PackageVersion Include="Robust.Natives.Zstd" Version="0.1.1-zstd1.5.7" />
+    </ItemGroup>
+    <ItemGroup Label="Тесты">
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageVersion Include="nunit" Version="4.2.2" />
+        <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
+    </ItemGroup>
+</Project>
