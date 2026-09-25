@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -12,6 +13,9 @@ public sealed partial class DialogService : ObservableObject
     private IDialog? _current;
 
     public bool IsOpen => Current != null;
+
+    /// <summary>Heading of the current dialog, kept up to date when its language changes.</summary>
+    public string Title => Current?.Title ?? string.Empty;
 
     /// <summary>
     /// Whether the current dialog closes on backdrop click.
@@ -41,8 +45,24 @@ public sealed partial class DialogService : ObservableObject
     [RelayCommand]
     public void CloseCurrent() => Current?.Cancel();
 
+    partial void OnCurrentChanging(IDialog? value)
+    {
+        if (Current is INotifyPropertyChanged old)
+            old.PropertyChanged -= OnDialogPropertyChanged;
+    }
+
+    private void OnDialogPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(IDialog.Title) or null)
+            OnPropertyChanged(nameof(Title));
+    }
+
     partial void OnCurrentChanged(IDialog? value)
     {
+        if (value is INotifyPropertyChanged current)
+            current.PropertyChanged += OnDialogPropertyChanged;
+
+        OnPropertyChanged(nameof(Title));
         OnPropertyChanged(nameof(IsOpen));
         OnPropertyChanged(nameof(CanDismiss));
     }

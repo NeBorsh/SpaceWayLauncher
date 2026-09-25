@@ -31,6 +31,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         Accounts = new AccountsViewModel(services.AccountManager, Dialogs);
         HubsSection = new HubsViewModel(services.HubManager, Dialogs);
         Updates = new UpdatesViewModel(services.Updates, services.Settings);
+        AccountSwitcher = new AccountSwitcherViewModel(services.AccountManager, SignInAsync);
         Settings = new SettingsViewModel(services.Settings, services.ContentUpdater, Dialogs, Updates);
         Mods = new ModsViewModel(services.Mods, Dialogs);
 
@@ -60,6 +61,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public ModsViewModel Mods { get; }
 
     public UpdatesViewModel Updates { get; }
+
+    public AccountSwitcherViewModel AccountSwitcher { get; }
 
     /// <summary>Modal dialogs over the main window.</summary>
     public DialogService Dialogs { get; } = new();

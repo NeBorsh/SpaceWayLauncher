@@ -7,6 +7,7 @@ nav-favorites = Favorites
 nav-accounts = Accounts
 nav-mods = Mods
 nav-settings = Settings
+sidebar-account = Account
 
 ## Server list
 servers-empty = No servers found
