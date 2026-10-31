@@ -20,7 +20,6 @@
             <Button Grid.Column="1"
                     VerticalAlignment="Center"
                     Command="{Binding Refresh.RefreshCommand}"
-                    IsEnabled="{Binding !Refresh.IsLoading}"
                     Content="{loc:Translate servers-refresh}" />
         </Grid>
 
@@ -109,7 +108,7 @@
 
         <Panel Grid.Row="3">
             <TextBlock Classes="muted"
-                       IsVisible="{Binding Refresh.IsLoading}"
+                       IsVisible="{Binding IsLoadingEmpty}"
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        Text="{loc:Translate servers-loading}" />
 

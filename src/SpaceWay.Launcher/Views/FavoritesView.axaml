@@ -14,13 +14,17 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,12">
             <StackPanel Grid.Column="0" Spacing="2">
                 <TextBlock Classes="h1" Text="{loc:Translate nav-favorites}" />
-                <TextBlock Classes="muted" Text="{Binding CountText}" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Classes="muted" Text="{Binding CountText}" />
+                    <TextBlock Classes="muted"
+                               IsVisible="{Binding Refresh.IsLoading}"
+                               Text="{loc:Translate servers-loading}" />
+                </StackPanel>
             </StackPanel>
 
             <Button Grid.Column="1"
                     VerticalAlignment="Center"
                     Command="{Binding Refresh.RefreshCommand}"
-                    IsEnabled="{Binding !Refresh.IsLoading}"
                     Content="{loc:Translate servers-refresh}" />
         </Grid>
 
@@ -40,11 +44,6 @@
         </controls:AngleCard>
 
         <Panel Grid.Row="3">
-            <TextBlock Classes="muted"
-                       IsVisible="{Binding Refresh.IsLoading}"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Text="{loc:Translate servers-loading}" />
-
             <StackPanel IsVisible="{Binding IsEmpty}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"

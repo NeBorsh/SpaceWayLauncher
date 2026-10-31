@@ -32,5 +32,5 @@ public abstract class LocalizedViewModel : ObservableObject, IDisposable
     /// Unsubscribes immediately. Optional, since the garbage collector removes the
     /// subscription eventually, but a window that just closed need not wait for it.
     /// </summary>
-    public void Dispose() => Loc.UnsubscribeWeak(_onLanguageChanged);
+    public virtual void Dispose() => Loc.UnsubscribeWeak(_onLanguageChanged);
 }

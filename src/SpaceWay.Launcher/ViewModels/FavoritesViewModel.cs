@@ -34,12 +34,6 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
 
         _directory.Updated += Reload;
 
-        _refresh.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(ServerRefreshViewModel.IsLoading))
-                OnPropertyChanged(nameof(IsEmpty));
-        };
-
         Reload();
     }
 
@@ -49,7 +43,11 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
 
     public string CountText => Loc.T("servers-count", ("count", Items.Count));
 
-    public bool IsEmpty => !_refresh.IsLoading && Items.Count == 0;
+    /// <summary>
+    /// Favorites come from the local database, so a hub refresh never makes
+    /// the list empty or non-empty; the hint stays visible while loading.
+    /// </summary>
+    public bool IsEmpty => Items.Count == 0;
 
     /// <summary>
     /// Adding a server bypassing hubs: address entered manually.
@@ -62,9 +60,17 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
 
     protected override void OnLanguageChanged() => OnPropertyChanged(nameof(CountText));
 
+    public override void Dispose()
+    {
+        _favorites.Changed -= Reload;
+        _directory.Updated -= Reload;
+        DisposeItems();
+        base.Dispose();
+    }
+
     private void Reload()
     {
-        Items.Clear();
+        DisposeItems();
 
         foreach (var favorite in _favorites.Servers.OrderBy(s => s.SortOrder))
         {
@@ -79,5 +85,13 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
 
         OnPropertyChanged(nameof(CountText));
         OnPropertyChanged(nameof(IsEmpty));
+    }
+
+    private void DisposeItems()
+    {
+        foreach (var item in Items)
+            item.Dispose();
+
+        Items.Clear();
     }
 }

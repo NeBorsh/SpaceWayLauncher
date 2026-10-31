@@ -65,7 +65,7 @@ public sealed class ServerListService(IHubApi api)
             Log.Debug("Hub {Hub} returned {Count} servers", hub.DisplayName, entries.Length);
             return entries;
         }
-        catch (Exception e) when (e is not OperationCanceledException)
+        catch (Exception e) when (!cancel.IsCancellationRequested)
         {
             Log.Warning(e, "Hub {Hub} is unavailable", hub.DisplayName);
             return null;

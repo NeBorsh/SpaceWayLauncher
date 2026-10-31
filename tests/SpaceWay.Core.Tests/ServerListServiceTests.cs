@@ -67,6 +67,37 @@ public sealed class ServerListServiceTests
     }
 
     [Test]
+    public async Task TimedOutHub_DoesNotBreakOthers()
+    {
+        var api = new FakeHubApi
+        {
+            [PrimaryHub] = [Entry("ss14://a.example:1212", "A")],
+            [SecondaryHub] = [Entry("ss14://b.example:1212", "B")],
+        };
+        api.TimeOut(SecondaryHub);
+
+        var result = await new ServerListService(api).FetchAsync([PrimaryHub, SecondaryHub]);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Servers.Select(s => s.DisplayName), Is.EqualTo(new[] { "A" }));
+            Assert.That(result.Failures.Select(f => f.Hub), Is.EqualTo(new[] { SecondaryHub }));
+        });
+    }
+
+    [Test]
+    public void CallerCancellation_AbortsTheWholeList()
+    {
+        var api = new FakeHubApi { [PrimaryHub] = [Entry("ss14://a.example:1212", "A")] };
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        Assert.That(
+            async () => await new ServerListService(api).FetchAsync([PrimaryHub], cts.Token),
+            Throws.InstanceOf<OperationCanceledException>());
+    }
+
+    [Test]
     public async Task DisabledHub_IsNotQueried()
     {
         var api = new FakeHubApi
@@ -109,14 +140,26 @@ public sealed class ServerListServiceTests
     private sealed class FakeHubApi : IHubApi
     {
         private readonly Dictionary<Uri, HubApi.HubServerEntry[]?> _responses = [];
+        private readonly HashSet<Uri> _timedOut = [];
 
         public HubApi.HubServerEntry[]? this[HubEntry hub]
         {
             set => _responses[hub.Address] = value;
         }
 
+        /// <summary>The hub fails the way an HttpClient timeout does.</summary>
+        public void TimeOut(HubEntry hub) => _timedOut.Add(hub.Address);
+
         public Task<HubApi.HubServerEntry[]> GetServers(Uri hubAddress, CancellationToken cancel)
         {
+            cancel.ThrowIfCancellationRequested();
+
+            if (_timedOut.Contains(hubAddress))
+            {
+                return Task.FromException<HubApi.HubServerEntry[]>(
+                    new TaskCanceledException("timeout", new TimeoutException()));
+            }
+
             var response = _responses.GetValueOrDefault(hubAddress);
             return response == null
                 ? Task.FromException<HubApi.HubServerEntry[]>(new HttpRequestException("hub unavailable"))

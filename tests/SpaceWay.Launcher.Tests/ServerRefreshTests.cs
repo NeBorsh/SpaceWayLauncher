@@ -2,6 +2,7 @@ using NUnit.Framework;
 using SpaceWay.Core.Data;
 using SpaceWay.Core.Favorites;
 using SpaceWay.Core.Hubs;
+using SpaceWay.Core.Localization;
 using SpaceWay.Launcher.ViewModels;
 
 namespace SpaceWay.Launcher.Tests;
@@ -115,6 +116,102 @@ public sealed class ServerRefreshTests
 
         Assert.That(_refresh.HasFailures, Is.False);
         Assert.That(_favoriteList.Items.Single().IsOffline, Is.False);
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public async Task CenteredLoadingIndicatorOnlyAppearsWithoutExistingServers(bool hasServers)
+    {
+        if (hasServers)
+            await _refresh.RefreshCommand.ExecuteAsync(null);
+
+        var pending = new TaskCompletionSource<HubApi.HubServerEntry[]>();
+        _api.Respond = () => pending.Task;
+        var notifications = new List<string?>();
+        _servers.PropertyChanged += (_, e) => notifications.Add(e.PropertyName);
+        var refresh = _refresh.RefreshCommand.ExecuteAsync(null);
+
+        try
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(_servers.IsLoadingEmpty, Is.EqualTo(!hasServers));
+                Assert.That(_servers.IsEmpty, Is.False);
+                Assert.That(_servers.Servers.Count, Is.EqualTo(hasServers ? 1 : 0));
+                Assert.That(notifications, Does.Contain(nameof(ServersViewModel.IsLoadingEmpty)));
+            });
+        }
+        finally
+        {
+            pending.SetResult([Entry("Box", 10)]);
+            await refresh;
+        }
+
+        Assert.That(_servers.IsLoadingEmpty, Is.False);
+    }
+
+    [Test]
+    public async Task EmptyFavoritesHintStaysVisibleDuringHubRefresh()
+    {
+        _favorites.Remove(_favorites.Servers.Single().Id);
+        var pending = new TaskCompletionSource<HubApi.HubServerEntry[]>();
+        _api.Respond = () => pending.Task;
+        var refresh = _refresh.RefreshCommand.ExecuteAsync(null);
+
+        try
+        {
+            Assert.That(_refresh.IsLoading, Is.True);
+            Assert.That(_favoriteList.IsEmpty, Is.True);
+        }
+        finally
+        {
+            pending.SetResult([Entry("Box", 10)]);
+            await refresh;
+        }
+
+        Assert.That(_favoriteList.IsEmpty, Is.True);
+    }
+
+    [Test]
+    public async Task DisposedListsStopReactingToDirectoryFavoritesAndRefreshChanges()
+    {
+        await _refresh.RefreshCommand.ExecuteAsync(null);
+        _servers.Dispose();
+        _favoriteList.Dispose();
+        var notifications = 0;
+        _servers.PropertyChanged += (_, _) => notifications++;
+        _favoriteList.PropertyChanged += (_, _) => notifications++;
+
+        _favorites.Add("ss14://another.example");
+        await _refresh.RefreshCommand.ExecuteAsync(null);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_servers.Servers, Is.Empty);
+            Assert.That(_favoriteList.Items, Is.Empty);
+            Assert.That(notifications, Is.Zero);
+        });
+    }
+
+    [Test]
+    public async Task ReplacedCardsStopReactingToLanguageChanges()
+    {
+        await _refresh.RefreshCommand.ExecuteAsync(null);
+        var serverCard = _servers.Servers.Single();
+        var favoriteCard = _favoriteList.Items.Single();
+        var notifications = 0;
+        serverCard.PropertyChanged += (_, _) => notifications++;
+        favoriteCard.PropertyChanged += (_, _) => notifications++;
+
+        await _refresh.RefreshCommand.ExecuteAsync(null);
+        Loc.SetLanguage(Loc.Current);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(_servers.Servers.Single(), Is.Not.SameAs(serverCard));
+            Assert.That(_favoriteList.Items.Single(), Is.Not.SameAs(favoriteCard));
+            Assert.That(notifications, Is.Zero);
+        });
     }
 
     private static HubApi.HubServerEntry Entry(string map, int players) => new()

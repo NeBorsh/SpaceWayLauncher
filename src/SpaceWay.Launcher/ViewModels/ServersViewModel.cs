@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -71,11 +72,7 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         LoadSettings();
 
         _directory.Updated += OnDirectoryUpdated;
-        _refresh.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(ServerRefreshViewModel.IsLoading))
-                NotifyCountsChanged();
-        };
+        _refresh.PropertyChanged += OnRefreshPropertyChanged;
     }
 
     /// <summary>
@@ -134,10 +131,33 @@ public sealed partial class ServersViewModel : LocalizedViewModel
     /// <summary>No servers at all, before or after filtering.</summary>
     public bool IsEmpty => !_refresh.IsLoading && ShownCount == 0 && TotalCount == 0;
 
+    /// <summary>
+    /// The centered loading text is shown only while there is nothing to show yet.
+    /// A refresh over an existing list keeps the cards and only disables the button,
+    /// otherwise the text is drawn on top of them.
+    /// </summary>
+    public bool IsLoadingEmpty => _refresh.IsLoading && TotalCount == 0;
+
+    public override void Dispose()
+    {
+        _directory.Updated -= OnDirectoryUpdated;
+        _refresh.PropertyChanged -= OnRefreshPropertyChanged;
+        ++_rebuildGeneration;
+        _ordered.Clear();
+        DisposeServers();
+        base.Dispose();
+    }
+
     private void OnDirectoryUpdated()
     {
         RefreshTagOptions();
         Rebuild();
+    }
+
+    private void OnRefreshPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ServerRefreshViewModel.IsLoading))
+            NotifyCountsChanged();
     }
 
     [RelayCommand]
@@ -171,11 +191,19 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         var filter = CurrentFilter();
 
         _ordered = filter.Order(_directory.Servers).ToList();
-        Servers.Clear();
+        DisposeServers();
 
         ApplyFilter(filter);
 
         AddBatch(generation, 0);
+    }
+
+    private void DisposeServers()
+    {
+        foreach (var server in Servers)
+            server.Dispose();
+
+        Servers.Clear();
     }
 
     private void AddBatch(int generation, int start)
@@ -235,6 +263,7 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         OnPropertyChanged(nameof(IsEmpty));
         OnPropertyChanged(nameof(IsEmptyByFilter));
         OnPropertyChanged(nameof(EmptyByFilterText));
+        OnPropertyChanged(nameof(IsLoadingEmpty));
     }
 
     private void RefreshTagOptions()
