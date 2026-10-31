@@ -2,7 +2,6 @@ using System.Collections.ObjectModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Serilog;
 using SpaceWay.Core.Data;
 using SpaceWay.Core.Favorites;
 using SpaceWay.Core.Hubs;
@@ -27,18 +26,15 @@ public sealed partial class ServersViewModel : LocalizedViewModel
     private List<MergedServer> _ordered = [];
 
     private readonly ServerDirectory _directory;
-    private readonly HubManager _hubs;
+    private readonly ServerRefreshViewModel _refresh;
     private readonly SettingsStore _settings;
     private readonly FavoritesService _favorites;
     private readonly Func<string, string, Task>? _connect;
     private readonly ServerCardState? _cards;
 
-    private CancellationTokenSource? _inFlight;
     private bool _loadingSettings;
     private bool _refreshingTags;
 
-    [ObservableProperty] private bool _isLoading;
-    [ObservableProperty] private int _failedHubCount;
     [ObservableProperty] private string _search = string.Empty;
     [ObservableProperty] private bool _hideFull;
     [ObservableProperty] private bool _hideEmpty;
@@ -48,14 +44,14 @@ public sealed partial class ServersViewModel : LocalizedViewModel
 
     public ServersViewModel(
         ServerDirectory directory,
-        HubManager hubs,
+        ServerRefreshViewModel refresh,
         SettingsStore settings,
         FavoritesService favorites,
         Func<string, string, Task>? connect = null,
         ServerCardState? cards = null)
     {
         _directory = directory;
-        _hubs = hubs;
+        _refresh = refresh;
         _settings = settings;
         _favorites = favorites;
         _connect = connect;
@@ -73,6 +69,13 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         TagGroups = [LanguageTags, RolePlayTags, RegionTags];
 
         LoadSettings();
+
+        _directory.Updated += OnDirectoryUpdated;
+        _refresh.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ServerRefreshViewModel.IsLoading))
+                NotifyCountsChanged();
+        };
     }
 
     /// <summary>
@@ -80,6 +83,8 @@ public sealed partial class ServersViewModel : LocalizedViewModel
     /// hidden by them (<see cref="ServerItemViewModel.IsShown"/>).
     /// </summary>
     public ObservableCollection<ServerItemViewModel> Servers { get; } = [];
+
+    public ServerRefreshViewModel Refresh => _refresh;
 
     /// <summary>Number of cards passing the filters.</summary>
     public int ShownCount { get; private set; }
@@ -122,53 +127,17 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         : Loc.T("servers-count", ("count", ShownCount));
 
     /// <summary>The list is empty only because of filters; servers exist.</summary>
-    public bool IsEmptyByFilter => !IsLoading && ShownCount == 0 && TotalCount > 0;
+    public bool IsEmptyByFilter => !_refresh.IsLoading && ShownCount == 0 && TotalCount > 0;
 
     public string EmptyByFilterText => Loc.T("servers-empty-filtered", ("hidden", HiddenCount));
 
-    public string FailuresText => Loc.T("servers-hub-failed", ("count", FailedHubCount));
-
-    public bool HasFailures => FailedHubCount > 0;
-
     /// <summary>No servers at all, before or after filtering.</summary>
-    public bool IsEmpty => !IsLoading && ShownCount == 0 && TotalCount == 0;
+    public bool IsEmpty => !_refresh.IsLoading && ShownCount == 0 && TotalCount == 0;
 
-    [RelayCommand]
-    public async Task RefreshAsync()
+    private void OnDirectoryUpdated()
     {
-        var cts = new CancellationTokenSource();
-        var previous = Interlocked.Exchange(ref _inFlight, cts);
-        if (previous != null)
-        {
-            await previous.CancelAsync();
-            previous.Dispose();
-        }
-
-        IsLoading = true;
-        NotifyCountsChanged();
-
-        try
-        {
-            await _directory.RefreshAsync(_hubs.Enabled, cts.Token);
-
-            FailedHubCount = _directory.Failures.Count;
-            RefreshTagOptions();
-            Rebuild();
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-        catch (Exception e)
-        {
-            Log.Error(e, "Failed to fetch server list");
-            FailedHubCount = _hubs.Enabled.Count;
-        }
-        finally
-        {
-            IsLoading = false;
-            NotifyCountsChanged();
-        }
+        RefreshTagOptions();
+        Rebuild();
     }
 
     [RelayCommand]
@@ -374,16 +343,9 @@ public sealed partial class ServersViewModel : LocalizedViewModel
         SaveSettings();
     }
 
-    partial void OnFailedHubCountChanged(int value)
-    {
-        OnPropertyChanged(nameof(FailuresText));
-        OnPropertyChanged(nameof(HasFailures));
-    }
-
     protected override void OnLanguageChanged()
     {
         OnPropertyChanged(nameof(CountText));
-        OnPropertyChanged(nameof(FailuresText));
         OnPropertyChanged(nameof(TagsButtonText));
 
         foreach (var group in TagGroups)

@@ -40,7 +40,7 @@ public sealed class App : Application
             Program.Instance?.Listen(message =>
                 Dispatcher.UIThread.Post(() => OnForwarded(message, window, viewModel)));
 
-            _ = viewModel.Servers.RefreshAsync();
+            _ = viewModel.Servers.Refresh.RefreshAsync();
 
             if (Program.StartupConnect is { } target)
                 _ = viewModel.ConnectFromLinkAsync(target);

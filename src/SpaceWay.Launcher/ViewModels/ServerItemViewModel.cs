@@ -138,6 +138,14 @@ public sealed partial class ServerItemViewModel : LocalizedViewModel
 
     public string RoundText => _server == null ? string.Empty : FormatRound(_server);
 
+    public string MapName => _server?.Status.Map?.Trim() ?? string.Empty;
+
+    public bool HasMap => MapName.Length > 0;
+
+    public string MapText => HasMap
+        ? Loc.T("server-map", ("map", MapName))
+        : string.Empty;
+
     public IReadOnlyList<string> Tags => _server?.AllTags ?? Favorite?.Tags ?? [];
 
     /// <summary>
@@ -253,6 +261,7 @@ public sealed partial class ServerItemViewModel : LocalizedViewModel
     {
         OnPropertyChanged(nameof(SlotsText));
         OnPropertyChanged(nameof(RoundText));
+        OnPropertyChanged(nameof(MapText));
         OnPropertyChanged(nameof(SourceText));
         OnPropertyChanged(nameof(DetailsErrorText));
     }

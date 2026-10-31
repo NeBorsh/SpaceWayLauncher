@@ -36,6 +36,7 @@ server-round-lobby = Lobby
 server-round-ending = Round over
 server-round-hours = Round: { $hours }h { $minutes }m
 server-round-minutes = Round: { $minutes }m
+server-map = Map: { $map }
 server-details-loading = Loading server info…
 server-details-empty = The server has no description or links.
 

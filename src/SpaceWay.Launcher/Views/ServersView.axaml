@@ -19,8 +19,8 @@
 
             <Button Grid.Column="1"
                     VerticalAlignment="Center"
-                    Command="{Binding RefreshCommand}"
-                    IsEnabled="{Binding !IsLoading}"
+                    Command="{Binding Refresh.RefreshCommand}"
+                    IsEnabled="{Binding !Refresh.IsLoading}"
                     Content="{loc:Translate servers-refresh}" />
         </Grid>
 
@@ -100,16 +100,16 @@
         </controls:AngleCard>
 
         <controls:AngleCard Grid.Row="2"
-                IsVisible="{Binding HasFailures}"
+                IsVisible="{Binding Refresh.HasFailures}"
                 Classes="warning" Margin="0,0,0,10">
-            <TextBlock Text="{Binding FailuresText}"
+            <TextBlock Text="{Binding Refresh.FailuresText}"
                        FontSize="12"
                        Foreground="{StaticResource BrushWarning}" />
         </controls:AngleCard>
 
         <Panel Grid.Row="3">
             <TextBlock Classes="muted"
-                       IsVisible="{Binding IsLoading}"
+                       IsVisible="{Binding Refresh.IsLoading}"
                        HorizontalAlignment="Center" VerticalAlignment="Center"
                        Text="{loc:Translate servers-loading}" />
 

@@ -10,6 +10,7 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
 {
     private readonly FavoritesService _favorites;
     private readonly ServerDirectory _directory;
+    private readonly ServerRefreshViewModel _refresh;
     private readonly DialogService _dialogs;
     private readonly Func<string, string, Task>? _connect;
     private readonly ServerCardState? _cards;
@@ -17,12 +18,14 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
     public FavoritesViewModel(
         FavoritesService favorites,
         ServerDirectory directory,
+        ServerRefreshViewModel refresh,
         DialogService dialogs,
         Func<string, string, Task>? connect = null,
         ServerCardState? cards = null)
     {
         _favorites = favorites;
         _directory = directory;
+        _refresh = refresh;
         _dialogs = dialogs;
         _connect = connect;
         _cards = cards;
@@ -31,14 +34,22 @@ public sealed partial class FavoritesViewModel : LocalizedViewModel
 
         _directory.Updated += Reload;
 
+        _refresh.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ServerRefreshViewModel.IsLoading))
+                OnPropertyChanged(nameof(IsEmpty));
+        };
+
         Reload();
     }
 
     public ObservableCollection<ServerItemViewModel> Items { get; } = [];
 
+    public ServerRefreshViewModel Refresh => _refresh;
+
     public string CountText => Loc.T("servers-count", ("count", Items.Count));
 
-    public bool IsEmpty => Items.Count == 0;
+    public bool IsEmpty => !_refresh.IsLoading && Items.Count == 0;
 
     /// <summary>
     /// Adding a server bypassing hubs: address entered manually.

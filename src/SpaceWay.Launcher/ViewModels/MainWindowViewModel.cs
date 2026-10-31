@@ -17,17 +17,24 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _services = services;
 
         var cards = new ServerCardState(services.ServerInfo);
+        var serverRefresh = new ServerRefreshViewModel(services.Directory, services.HubManager);
 
         Servers = new ServersViewModel(
             services.Directory,
-            services.HubManager,
+            serverRefresh,
             services.Settings,
             services.FavoritesService,
             ConnectToServer,
             cards);
 
         Favorites = new FavoritesViewModel(
-            services.FavoritesService, services.Directory, Dialogs, ConnectToServer, cards);
+            services.FavoritesService,
+            services.Directory,
+            serverRefresh,
+            Dialogs,
+            ConnectToServer,
+            cards);
+
         Accounts = new AccountsViewModel(services.AccountManager, Dialogs);
         HubsSection = new HubsViewModel(services.HubManager, Dialogs);
         Updates = new UpdatesViewModel(services.Updates, services.Settings);

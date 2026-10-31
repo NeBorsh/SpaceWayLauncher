@@ -6,6 +6,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/SpaceWay.Core.Tests/SpaceWay.Core.Tests.csproj" />
+    <Project Path="tests/SpaceWay.Launcher.Tests/SpaceWay.Launcher.Tests.csproj" />
   </Folder>
   <Folder Name="/vendor/">
     <Project Path="vendor/Robust.LoaderApi/Robust.LoaderApi.csproj" />

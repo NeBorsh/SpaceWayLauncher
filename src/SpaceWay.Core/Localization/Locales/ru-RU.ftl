@@ -38,6 +38,7 @@ server-round-lobby = Лобби
 server-round-ending = Раунд закончен
 server-round-hours = Раунд: { $hours } ч { $minutes } мин
 server-round-minutes = Раунд: { $minutes } мин
+server-map = Карта: { $map }
 server-details-loading = Загружаем описание сервера…
 server-details-empty = Сервер не указал описание и ссылки
 
